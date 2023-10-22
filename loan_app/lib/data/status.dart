@@ -1,1 +1,0 @@
-enum AdLoadState { notLoaded, loading, loaded }

@@ -68,6 +68,9 @@ class Enroll {
 
   @override
   int get hashCode {
-    return user.hashCode ^ enrollDetails.hashCode ^ enrollLiving.hashCode ^ moreDetails.hashCode;
+    return user.hashCode ^
+        enrollDetails.hashCode ^
+        enrollLiving.hashCode ^
+        moreDetails.hashCode;
   }
 }

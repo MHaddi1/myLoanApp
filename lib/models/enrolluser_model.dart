@@ -15,6 +15,7 @@ class EnrollUser {
   });
 
   factory EnrollUser.fromJson(Map<String, dynamic> json) {
+    print("Inside User model");
     return EnrollUser(
       fname: json['fname'] as String,
       lname: json['lname'] as String,

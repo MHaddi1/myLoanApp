@@ -1,5 +1,4 @@
-import 'package:flutter/material.dart' show immutable;
-import 'package:flutter/foundation.dart';
+import 'package:flutter/foundation.dart' show immutable, kDebugMode;
 
 @immutable
 class EnrollLiving {

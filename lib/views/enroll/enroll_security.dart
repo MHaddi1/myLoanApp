@@ -23,9 +23,9 @@ class _EnrollSecurityState extends State<EnrollSecurity> {
     confirmPasswordController.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -47,7 +47,7 @@ class _EnrollSecurityState extends State<EnrollSecurity> {
                       check: (p0) {
                         enrollController.myPassword(p0!);
                       },
-                      myController: enrollController.passwordController,
+                      myController: passwordController,
                       hintText: "password",
                       textType: TextInputType.visiblePassword),
                   const SizedBox(
@@ -58,7 +58,7 @@ class _EnrollSecurityState extends State<EnrollSecurity> {
                       check: (p0) {
                         enrollController.cMyPassword(p0!);
                       },
-                      myController: enrollController.confirmPasswordController,
+                      myController: confirmPasswordController,
                       hintText: "confirm Password",
                       textType: TextInputType.visiblePassword),
                   Obx(() => Text(

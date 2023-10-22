@@ -15,9 +15,10 @@ class MoreDetails {
   });
 
   factory MoreDetails.fromJson(Map<String, dynamic> json) {
+    print("Inside MoreDetails");
     return MoreDetails(
       numbersDetail: json['numbersDetail'] as String,
-      idType: json['idType'] as String,
+      idType: json['status'] as String,
       state: json['state'] as String,
       issuedDate: json['issuedDate'] as String,
     );

@@ -3,7 +3,6 @@ import 'package:intl/intl.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:main_loan_app/models/enroll_model.dart';
 import 'package:main_loan_app/res/components/loan_text_field.dart';
 import 'package:main_loan_app/res/components/my_button.dart';
 import 'package:main_loan_app/res/routes/routes_name.dart';
@@ -21,69 +20,34 @@ class _EnterNamesState extends State<EnterNames> {
   final enrollController = Get.find<EnrollController>();
   final pageController = Get.put(PageControllers());
   late String email;
-  late CollectionReference
-      collection; // Use 'CollectionReference' instead of 'dynamic'.
+  late CollectionReference collection;
   DocumentReference? documentReference;
-  Enroll? enroll;
 
-   final usernameController = TextEditingController();
+  final usernameController = TextEditingController();
   final middleNameController = TextEditingController();
   final lastNameController = TextEditingController();
   final dateOfBirthController = TextEditingController();
+
   @override
   void initState() {
-    
     super.initState();
-    enrollController.fetchData();
+    final enroll = enrollController.enroll.value;
+    if (enroll != null) {
+      usernameController.text = enroll.user.fname;
+      lastNameController.text = enroll.user.lname;
+      middleNameController.text = enroll.user.middleName ?? "";
+      dateOfBirthController.text = enroll.user.dob;
+    }
   }
 
   @override
   void dispose() {
-  
     usernameController.dispose();
     middleNameController.dispose();
     lastNameController.dispose();
     dateOfBirthController.dispose();
     super.dispose();
   }
-  
-
-//   Future<void> loadDataFromFirebase() async {
-//     // Remove the redundant collection initialization.
-
-//    try {
-//   final QuerySnapshot querySnapshot = await collection.get();
-//   print("firebase Firestore ${querySnapshot.docs}");
-
-//   if (querySnapshot.docs.isNotEmpty) {
-//     final documentId = querySnapshot.docs.first.id;
-//     final documentSnapshot = await collection.doc(documentId).get();
-
-//     if (documentSnapshot.exists) {
-//       final data = documentSnapshot.data() as Map<String, dynamic>;
-
-//       // Decode the data using jsonDecode
-//       final decodedData = Enroll.fromJson(jsonDecode(data as String));
-
-//       // Now you can update your 'enroll' object with the decoded data
-
-//       // You may also want to print the updated 'enroll' object
-//       print("Updated Enroll: $decodedData");
-//       print("My Email ${decodedData.enrollDetails.email}");
-//     } else {
-//       print("No Document Found");
-//     }
-//   } else {
-//     if (kDebugMode) {
-//       print("No Document match Found in Firebase");
-//     }
-//   }
-// } catch (e) {
-//   // Handle any potential errors when loading data
-//   print("Error loading data: $e");
-// }
-
-//   }
 
   final key = GlobalKey<FormState>();
 
@@ -93,10 +57,11 @@ class _EnterNamesState extends State<EnterNames> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-            onPressed: () {
-              Get.back();
-            },
-            icon: const Icon(Icons.arrow_back)),
+          onPressed: () {
+            Get.back();
+          },
+          icon: const Icon(Icons.arrow_back),
+        ),
       ),
       body: Container(
         alignment: Alignment.bottomCenter,
@@ -131,7 +96,7 @@ class _EnterNamesState extends State<EnterNames> {
                               },
                               minLength: 2,
                               maxLength: 15,
-                              check: (value){
+                              check: (value) {
                                 enrollController.setFName(value!);
                               },
                               textType: TextInputType.name,
@@ -152,7 +117,7 @@ class _EnterNamesState extends State<EnterNames> {
                             height: 50.0,
                           ),
                           LoanTextField(
-                            check: (value){
+                            check: (value) {
                               enrollController.setMiddle(value!);
                             },
                             minLength: 2,
@@ -166,9 +131,9 @@ class _EnterNamesState extends State<EnterNames> {
                             height: 50.0,
                           ),
                           LoanTextField(
-                            check: (value){
-                              enrollController.setLName(value!);
-                            },
+                              check: (value) {
+                                enrollController.setLName(value!);
+                              },
                               minLength: 2,
                               maxLength: 15,
                               textType: TextInputType.name,
@@ -192,11 +157,8 @@ class _EnterNamesState extends State<EnterNames> {
                             children: [
                               Expanded(
                                 child: LoanTextField(
-                                  check: (value){
-                                    
-                                  },
-                                    myController:
-                                        dateOfBirthController,
+                                    check: (value) {},
+                                    myController: dateOfBirthController,
                                     hintText: "dob".tr,
                                     textType: TextInputType.datetime),
                               ),
@@ -231,10 +193,7 @@ class _EnterNamesState extends State<EnterNames> {
                       }
 
                       pageController.setPageNo(2);
-                      Get.find<EnrollController>().toggleLoading();
-                      await Get.toNamed(
-                        RoutesName.enrollScrren2,
-                      );
+                      await Get.toNamed(RoutesName.enrollScrren2);
                       pageController.setPageNo(1);
                     }
                   },

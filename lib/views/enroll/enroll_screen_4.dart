@@ -8,10 +8,9 @@ import 'package:main_loan_app/res/components/date_entry.dart';
 import 'package:main_loan_app/res/components/loan_text_field.dart';
 import 'package:main_loan_app/res/components/my_button.dart';
 import 'package:main_loan_app/res/routes/routes_name.dart';
+import 'package:main_loan_app/view_models/controllers/enroll_controller/enroll_controller.dart';
 // import 'package:main_loan_app/res/routes/routes_name.dart';
 import 'package:main_loan_app/view_models/controllers/page_controller/page_controller.dart';
-
-import '../../view_models/controllers/enroll_controller/enroll_controller.dart';
 
 class EnrollScreen4 extends StatefulWidget {
   const EnrollScreen4({super.key});
@@ -21,7 +20,7 @@ class EnrollScreen4 extends StatefulWidget {
 }
 
 class _EnrollScreen4State extends State<EnrollScreen4> {
-  final enrollController = Get.put(EnrollController());
+  final enrollController = Get.find<EnrollController>();
   final pageController = Get.find<PageControllers>();
   final key = GlobalKey<FormState>();
   final dateOfBirthController = TextEditingController();
@@ -31,6 +30,7 @@ class _EnrollScreen4State extends State<EnrollScreen4> {
     idNubmerController.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -63,6 +63,7 @@ class _EnrollScreen4State extends State<EnrollScreen4> {
                   child: SingleChildScrollView(
                     child: Form(
                       key: key,
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
                       child: Column(
                         children: [
                           Obx(
@@ -115,7 +116,7 @@ class _EnrollScreen4State extends State<EnrollScreen4> {
                             showStates: true,
                             disableCountry: true,
                             // countryFilter: Get.arguments,
-                           // currentCountry: Get.arguments[0],
+                            // currentCountry: Get.arguments[0],
                             // countryFilter: Get.arguments,
 
                             onCountryChanged: (value) async {
@@ -184,7 +185,6 @@ class _EnrollScreen4State extends State<EnrollScreen4> {
                       Get.find<EnrollController>().toggleLoading();
                       Get.toNamed(RoutesName.enrollScrren5);
                       if (kDebugMode) {
-
                         print("pressed");
                       }
                       // Get.toNamed(RoutesName.enrollScrren2);
@@ -199,7 +199,7 @@ class _EnrollScreen4State extends State<EnrollScreen4> {
     );
   }
 
-  Future<void> _selectDate(
+  Future<void> selectDate(
       BuildContext context, EnrollController controller) async {
     final DateTime? picked = await showDatePicker(
       context: context,

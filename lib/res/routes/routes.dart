@@ -12,39 +12,44 @@ import '../../views/enroll/enroll_screen_3.dart';
 
 class AppRoutes {
   static appRoutes() => [
-    GetPage(name: RoutesName.splashScreen, page: ()=> const SplashScreen()
-    ,transition: Transition.leftToRight,transitionDuration: const Duration(
-          seconds: 1
-        )),
-        GetPage(name: RoutesName.loginScrren, page: () => const LoginScreen()
-        ,transition: Transition.leftToRight,transitionDuration: const Duration(
-          milliseconds: 1500
-        )),
-        GetPage(name: RoutesName.enrollScrren1, page: () => const EnterNames()
-        ,transition: Transition.leftToRight,transitionDuration: const Duration(
-          seconds: 1
-        )),
         GetPage(
-            name: RoutesName.enrollScrren2, page: () => const EnrollScreen2()
-            ,transition: Transition.leftToRight,transitionDuration: const Duration(
-          seconds: 1
-        )),
+          name: RoutesName.splashScreen,
+          page: () => const SplashScreen(),
+          transition: Transition.leftToRight,
+        ),
         GetPage(
-            name: RoutesName.enrollScrren3, page: () => const EnrollScreen3()
-            ,transition: Transition.leftToRight,transitionDuration: const Duration(
-          seconds: 1
-        )),
+          name: RoutesName.loginScrren,
+          page: () => const LoginScreen(),
+          transition: Transition.leftToRight,
+        ),
         GetPage(
-            name: RoutesName.enrollScrren4, page: () => const EnrollScreen4()
-            ,transition: Transition.leftToRight,transitionDuration: const Duration(
-          seconds: 1
-        )),
+          name: RoutesName.enrollScrren1,
+          page: () => const EnterNames(),
+          transition: Transition.leftToRight,
+        ),
         GetPage(
-            name: RoutesName.enrollScrren5, page: () => const EnrollSecurity()),
-            GetPage(name: RoutesName.homePage, page: ()=>const HomePage()
-            ,transition: Transition.leftToRight,transitionDuration: const Duration(
-          seconds: 1
+          name: RoutesName.enrollScrren2,
+          page: () => const EnrollScreen2(),
+          transition: Transition.leftToRight,
+        ),
+        GetPage(
+          name: RoutesName.enrollScrren3,
+          page: () => const EnrollScreen3(),
+          transition: Transition.leftToRight,
+        ),
+        GetPage(
+          name: RoutesName.enrollScrren4,
+          page: () => const EnrollScreen4(),
+          transition: Transition.leftToRight,
+        ),
+        GetPage(
+          name: RoutesName.enrollScrren5,
+          page: () => const EnrollSecurity(),
+        ),
+        GetPage(
+          name: RoutesName.homePage,
+          page: () => const HomePage(),
+          transition: Transition.leftToRight,
         )
-            )
       ];
 }

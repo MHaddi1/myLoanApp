@@ -21,16 +21,12 @@ class _EnrollScreen3State extends State<EnrollScreen3> {
   final key = GlobalKey<FormState>();
   final enrollController = Get.find<EnrollController>();
   final pageController = Get.find<PageControllers>();
-   final ssnController = TextEditingController();
+  final ssnController = TextEditingController();
   final itinController = TextEditingController();
-  
   final erpirationController = TextEditingController();
-  
 
   @override
   void dispose() {
-    
-    //idNubmerController.dispose();
     itinController.dispose();
     erpirationController.dispose();
     ssnController.dispose();
@@ -61,6 +57,7 @@ class _EnrollScreen3State extends State<EnrollScreen3> {
                   child: SingleChildScrollView(
                     child: Form(
                       key: key,
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
                       child: Column(
                         children: [
                           Align(
@@ -153,9 +150,9 @@ class _EnrollScreen3State extends State<EnrollScreen3> {
                                         : 'itin'.tr,
                                 validate: (value) {
                                   if (value == null || value.isEmpty) {
-                                    return "Please Enter your first name";
-                                  } else if (value.length <= 15 &&
-                                      value.length >= 17) {
+                                    return "required *";
+                                  } else if (value.length < 15 ||
+                                      value.length > 17) {
                                     return "Please Enter minimum character 15\n and Maximum character 17";
                                   }
                                   return null;

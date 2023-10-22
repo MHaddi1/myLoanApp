@@ -45,8 +45,7 @@ class Utils {
     );
   }
 
-   static  _selectDate(
-      BuildContext context, EnrollController controller) async {
+  static selectDate(BuildContext context, EnrollController controller) async {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: controller.selectedDate.value,
@@ -58,5 +57,4 @@ class Utils {
       controller.selectDate(picked);
     }
   }
-  
 }

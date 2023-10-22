@@ -13,18 +13,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:main_loan_app/utils/utils.dart';
 
 class EnrollController extends GetxController {
- 
-  
-  final ssnController = TextEditingController();
-  final itinController = TextEditingController();
-  final idNubmerController = TextEditingController();
-  final erpirationController = TextEditingController();
-  final passwordController = TextEditingController();
-  final confirmPasswordController = TextEditingController();
-
-  //final autovalidateMode;
-
- 
   FocusNode focusNode = FocusNode();
 
   RxString countryValue = ''.obs;
@@ -56,16 +44,17 @@ class EnrollController extends GetxController {
     confirmPassword.value = value;
     if (value == password.value) {
       passwordError.value = "password Matched";
-    }else if(value.length == password.value.length){
+    } else if (value.length == password.value.length) {
       passwordError.value = "Password and Confirm is Not Matched";
-    }else if(value.length>=6 && value.length<=15){
-      passwordError.value = "your Password Must be Greater or equal to 6\n less then or equal to 15";
+    } else if (value.length >= 6 && value.length <= 15) {
+      passwordError.value =
+          "your Password Must be Greater or equal to 6\n less then or equal to 15";
     } else {
       passwordError.value = "Password or Lenght mismatch";
     }
   }
 
- var isLoading = false.obs;
+  var isLoading = false.obs;
 
   void toggleLoading() {
     isLoading.value = !isLoading.value;
@@ -92,44 +81,45 @@ class EnrollController extends GetxController {
   // }
   RxString fname = ''.obs;
   RxString lname = ''.obs;
-  RxString mname = ''.obs; 
+  RxString mname = ''.obs;
   RxString dob = ''.obs;
   RxInt zipcode = 0.obs;
   RxString address1 = ''.obs;
   RxString addressO = ''.obs;
-  
 
-  void setFName(String firstName){
+  void setFName(String firstName) {
     fname.value = firstName;
   }
-  void setLName(String lastName){
+
+  void setLName(String lastName) {
     lname.value = lastName;
   }
-  void  setMiddle (String middleName){
+
+  void setMiddle(String middleName) {
     mname.value = middleName;
   }
 
-  void setDate(String dOb){
+  void setDate(String dOb) {
     dob.value = dOb;
   }
-  void setZipCode(int value){
+
+  void setZipCode(int value) {
     zipcode.value = value;
   }
 
-  void  setAddress (String value){
+  void setAddress(String value) {
     address1.value = value;
   }
 
-  void  setAddress_2 (String value){
+  void setAddress_2(String value) {
     addressO.value = value;
   }
 
-  
   void setPhoneNumber(String value) {
     phoneNumber.value = value;
   }
 
-  var emailIsValid = RxBool(false); 
+  var emailIsValid = RxBool(false);
   var email = ''.obs;
   var emailError = Rx<String?>('');
 
@@ -167,7 +157,6 @@ class EnrollController extends GetxController {
     countryValue.value = value;
   }
 
- 
   updateState(String value) {
     stateValue.value = value;
   }
@@ -227,8 +216,11 @@ class EnrollController extends GetxController {
     try {
       final Map<String, dynamic> enrollData = enroll.toJson();
 
-      await _firestore.collection('enrollments').add(enrollData).then((DocumentReference documentReference){
-        if(kDebugMode){
+      await _firestore
+          .collection('enrollments')
+          .add(enrollData)
+          .then((DocumentReference documentReference) {
+        if (kDebugMode) {
           print(documentReference.id);
         }
       });
@@ -264,14 +256,14 @@ class EnrollController extends GetxController {
   String get aDDressO => addressO.value;
   int get zipCode => zipcode.value;
 
-
   void onAddEnrollData() {
     Enroll enroll = Enroll(
       user: EnrollUser(
-          fname: fName,
-          lname: lName,
-          middleName: mName,
-          dob: myDOB),
+        fname: fName,
+        lname: lName,
+        middleName: mName,
+        dob: myDOB,
+      ),
       enrollDetails: EnrollDetails(
           email: eMail,
           phoneType: phn,
@@ -285,11 +277,11 @@ class EnrollController extends GetxController {
         city: city,
         jobT: worktype,
         livingPlace: living,
-        ssn: ssnController.text,
-        itin: itinController.text,
+        ssn: "",
+        itin: "",
       ),
       moreDetails: MoreDetails(
-        numbersDetail: idNubmerController.text,
+        numbersDetail: "",
         idType: idNumber,
         state: state,
         issuedDate: '12/12/2023',
@@ -297,38 +289,42 @@ class EnrollController extends GetxController {
     );
 
     addEnrollData(enroll);
-    //createUserAccount(eMail, passwordController.text);
   }
-  
+
   Future<void> createUserAccount(String email, String password) async {
-  try {
-    UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-      email: email,
-      password: password,
-    );
-    if(kDebugMode){
-      print("Create Account");
+    try {
+      UserCredential userCredential =
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      if (kDebugMode) {
+        print("Create Account");
+      }
+
+      await FirebaseFirestore.instance
+          .collection('loan_accounts')
+          .doc(userCredential.user!.uid)
+          .set({
+        'loan_status': 0,
+      }).then((value) => Utils.snackBar("Data Submit", "Check You Status"));
+    } catch (e) {
+      Utils.snackBar("error", e.toString());
     }
-
-    await FirebaseFirestore.instance.collection('loan_accounts').doc(userCredential.user!.uid).set({
-      'loan_status': 0, 
-      
-      
-    }).then((value) => Utils.snackBar("Data Submit", "Check You Status"));
-
-  } catch (e) {
-    Utils.snackBar("error", e.toString());
   }
-}
-Future<void> updateLoanStatus(String userId, int newStatus) async {
-  try {
-    await FirebaseFirestore.instance.collection('loan_accounts').doc(userId).update({
-      'loan_status': newStatus,
-    });
-  } catch (e) {
-    Utils.snackBar("error", e.toString());
+
+  Future<void> updateLoanStatus(String userId, int newStatus) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('loan_accounts')
+          .doc(userId)
+          .update({
+        'loan_status': newStatus,
+      });
+    } catch (e) {
+      Utils.snackBar("error", e.toString());
+    }
   }
-}
 
 //  Future<void> populateTextFieldsFromFirebase(String documentId,) async {
 //     try {
@@ -337,7 +333,7 @@ Future<void> updateLoanStatus(String userId, int newStatus) async {
 
 //       if (documentSnapshot.exists) {
 //         final data = documentSnapshot.data() as Map<dynamic, dynamic>;
-        
+
 //         usernameController.text = data['fname'] ?? 'You Name';
 //         middleNameController.text = data['middleName'] ?? '';
 //         lastNameController.text = data['lname'] ?? '';
@@ -348,7 +344,7 @@ Future<void> updateLoanStatus(String userId, int newStatus) async {
 //         zipCodeController.text = data['zipcode'] ?? '';
 //         addressController.text = data['address'] ?? '';
 //         optionalAddressController.text = data['optionalAddress'] ?? '';
-        
+
 //       } else {
 //         Get.snackbar("Error", "Document not found in Firestore");
 //       }
@@ -360,48 +356,46 @@ Future<void> updateLoanStatus(String userId, int newStatus) async {
 
   Future<String?> getDocumentIdFromFirebase(String searchEmail) async {
     isLoading.value = true;
-  final CollectionReference collection = FirebaseFirestore.instance.collection('enrollments');
-  final QuerySnapshot querySnapshot = await collection.get();
+    final CollectionReference collection =
+        FirebaseFirestore.instance.collection('enrollments');
+    final QuerySnapshot querySnapshot = await collection.get();
 
-  if (querySnapshot.docs.isNotEmpty) {
-    return querySnapshot.docs.first.id;
+    if (querySnapshot.docs.isNotEmpty) {
+      return querySnapshot.docs.first.id;
+    }
+
+    return null;
   }
 
-  return null;
-}
+  final Rx<Enroll?> enroll = Rx<Enroll?>(null);
 
-
-//inal FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
-  final Rx<Enroll?> enroll = (null).obs;
-
-  Future<void> fetchData() async { 
-    var collectionReference = FirebaseFirestore.instance.collection("enrollments");
+  Future<void> fetchData() async {
+    isLoading.value = true;
+    var collectionReference =
+        FirebaseFirestore.instance.collection("enrollments");
     var allData = await collectionReference.get();
     var dId = allData.docs.last.id;
-      // _debugPrint("Document ID $dId");
     try {
-      final docSnapshot = await _firestore.collection('enrollments').doc(dId).get();
-       _debugPrint('Doc Snapshot ${docSnapshot.data()}');
+      final docSnapshot =
+          await _firestore.collection('enrollments').doc(dId).get();
+      _debugPrint('Doc Snapshot ${docSnapshot.data()}');
+
       if (docSnapshot.exists) {
-        enroll.value = Enroll.fromJson(docSnapshot.data() as Map <String, dynamic>);
-       setFName(enroll.value!.user.fname);
-
-
-        isLoading.value = false;
-        _debugPrint(enroll.value?.user);
-      }else{
-        isLoading.value= true;
-        _debugPrint("enroll User ${enroll.value}");
-        isLoading.value = false;
+        final response = Enroll.fromJson(
+          docSnapshot.data() as Map<String, dynamic>,
+        );
+        enroll.value = response;
+      } else {
+        _debugPrint("Document not exists");
       }
     } catch (e) {
-        
+      _debugPrint(e.toString());
+    } finally {
+      isLoading.value = false;
     }
   }
-
 }
 
 void _debugPrint(message) {
-  if(kDebugMode) print(message);
+  if (kDebugMode) print(message);
 }

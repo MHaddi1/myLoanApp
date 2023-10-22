@@ -20,16 +20,29 @@ class _EnrollScreen2State extends State<EnrollScreen2> {
   final pageController = Get.put(PageControllers());
   final emailController = TextEditingController();
   final phoneNoController = TextEditingController();
-  final cityController = TextEditingController();
   final zipCodeController = TextEditingController();
   final addressController = TextEditingController();
   final optionalAddressController = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    final enroll = enrollController.enroll.value;
+    if (enroll != null) {
+      emailController.text = enroll.enrollDetails.email;
+      phoneNoController.text = enroll.enrollDetails.phone;
+      zipCodeController.text = enroll.enrollDetails.zipcode.toString();
+      addressController.text = enroll.enrollDetails.address;
+      optionalAddressController.text =
+          enroll.enrollDetails.optionalAddress ?? "";
+    }
+  }
+
+  @override
   void dispose() {
     emailController.dispose();
-    cityController.dispose();
     addressController.dispose();
+    zipCodeController.dispose();
     optionalAddressController.dispose();
     phoneNoController.dispose();
     super.dispose();
@@ -82,7 +95,7 @@ class _EnrollScreen2State extends State<EnrollScreen2> {
                               textType: TextInputType.emailAddress,
                               msg: "Please enter your Email",
                               labelText: "email_hint".tr,
-                              myController:emailController,
+                              myController: emailController,
                               hintText: "email_hint".tr,
                               validate: (value) {
                                 // enrollController.validateEmail(value ?? "");
@@ -111,22 +124,22 @@ class _EnrollScreen2State extends State<EnrollScreen2> {
                           const SizedBox(
                             height: 25.0,
                           ),
-                           DropdownButtonFormField<String>(
-                              value: enrollController.selectedItem.value,
-                              icon: null,
-                              onChanged: (String? newValue) {
-                                enrollController.setSelectedItem(newValue!);
-                              },
-                              dropdownColor: AppColor.feildColor,
-                              items: <String>['Phone Number', 'Work', 'Home']
-                                  .map((String val) {
-                                return DropdownMenuItem<String>(
-                                  value: val,
-                                  child: Text(val),
-                                );
-                              }).toList(),
-                            ),
-                          
+                          DropdownButtonFormField<String>(
+                            value: enrollController.selectedItem.value,
+                            icon: null,
+                            onChanged: (String? newValue) {
+                              enrollController.setSelectedItem(newValue!);
+                            },
+                            dropdownColor: AppColor.feildColor,
+                            items: <String>['Phone Number', 'Work', 'Home']
+                                .map((String val) {
+                              return DropdownMenuItem<String>(
+                                value: val,
+                                child: Text(val),
+                              );
+                            }).toList(),
+                          ),
+
                           const SizedBox(
                             height: 25,
                           ),
@@ -134,8 +147,7 @@ class _EnrollScreen2State extends State<EnrollScreen2> {
                             spaceBetweenSelectorAndTextField: 0,
                             hintText: "Phone Number",
                             initialValue: enrollController.number,
-                            textFieldController:
-                                phoneNoController,
+                            textFieldController: phoneNoController,
                             inputBorder: const OutlineInputBorder(),
                             formatInput: true,
                             errorMessage: "Invalid phone number",
@@ -165,9 +177,7 @@ class _EnrollScreen2State extends State<EnrollScreen2> {
                             height: 25.0,
                           ),
                           LoanTextField(
-                            check: (value){
-
-                            },
+                              check: (value) {},
                               textType: TextInputType.number,
                               msg: "Please enter Zip Code",
                               labelText: "zip_code".tr,
@@ -200,8 +210,7 @@ class _EnrollScreen2State extends State<EnrollScreen2> {
                           LoanTextField(
                               textType: TextInputType.streetAddress,
                               labelText: "home_address_2".tr,
-                              myController:
-                                  optionalAddressController,
+                              myController: optionalAddressController,
                               hintText: "home_address_2".tr)
                         ],
                       ),
@@ -218,8 +227,7 @@ class _EnrollScreen2State extends State<EnrollScreen2> {
                       key.currentState!.save();
                       //Get.find<EnrollController>().toggleLoading();
                       pageController.setPageNo(3);
-                      enrollController
-                          .navigator(emailController.text);
+                      enrollController.navigator(emailController.text);
                       // await Get.toNamed(RoutesName.enrollScrren3);
                       pageController.setPageNo(2);
                     }

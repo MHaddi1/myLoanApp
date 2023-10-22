@@ -1,8 +1,6 @@
 import 'dart:convert';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:main_loan_app/utils/utils.dart';
 import 'package:main_loan_app/view_models/shared_p/shared_preference.dart';
@@ -11,7 +9,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginController extends GetxController {
   static const spUsernameKey = "usernames";
-  
 
   RxBool isShowPassword = true.obs;
   RxBool saveUsername = false.obs;
@@ -26,8 +23,6 @@ class LoginController extends GetxController {
   final List<String> suggestedUsernames =
       []; // List to hold suggested usernames
   final RxBool showSuggestions = false.obs;
-
-
 
   showPassword() {
     isShowPassword.value = !isShowPassword.value;
@@ -84,39 +79,39 @@ class LoginController extends GetxController {
     return List<String>.from(jsonDecode(data));
   }
 
-   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   var errorText = ''.obs;
 
   Future<void> signIn(String email, String password) async {
     try {
-        final UserPreference userPreference = UserPreference();
-String? userToken = await FirebaseAuth.instance.currentUser?.getIdToken();
-      await _auth.signInWithEmailAndPassword(
+      final UserPreference userPreference = UserPreference();
+      String? userToken = await FirebaseAuth.instance.currentUser?.getIdToken();
+      await _auth
+          .signInWithEmailAndPassword(
         email: email,
         password: password,
-      ).then((value){
-         userPreference.saveUserToken(userToken!).then((value){
+      )
+          .then((value) {
+        userPreference.saveUserToken(userToken!).then((value) {
           Utils.snackBar("Save", "User");
-         });
+        });
       });
 
-      Get.offAll(()=> const HomePage());
+      Get.offAll(() => const HomePage());
     } on FirebaseAuthException catch (e) {
-  if (e.code == 'user-not-found' || e.code == 'wrong-password') {
-    Utils.snackBar("error", e.toString());
-    errorText.value = 'Invalid email or password.';
-  } else if(e.code == 'INVALID_LOGIN_CREDENTIALS'){
-    errorText.value = "InValid User Login";
-    Utils.snackBar("error", "User Not Found");
-
+      if (e.code == 'user-not-found' || e.code == 'wrong-password') {
+        Utils.snackBar("error", e.toString());
+        errorText.value = 'Invalid email or password.';
+      } else if (e.code == 'INVALID_LOGIN_CREDENTIALS') {
+        errorText.value = "InValid User Login";
+        Utils.snackBar("error", "User Not Found");
+      } else {
+        // Handle other FirebaseAuth errors
+        errorText.value = e.message ?? 'An error occurred.';
+      }
+    } catch (e) {
+      errorText.value = e.toString();
+    }
   }
-   else {
-    // Handle other FirebaseAuth errors
-    errorText.value = e.message ?? 'An error occurred.';
-  }
-} catch (e) {
-  errorText.value = e.toString();
-}
-  } 
 }

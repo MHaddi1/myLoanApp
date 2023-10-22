@@ -19,9 +19,10 @@ class EnrollDetails {
   });
 
   factory EnrollDetails.fromJson(Map<String, dynamic> json) {
+    print("Inside EnrollDetails");
     return EnrollDetails(
       email: json['email'] as String,
-      phoneType: json['status'] as String,
+      phoneType: json['phoneType'] as String,
       phone: json['phone'] as String,
       zipcode: json['zipcode'] as int,
       address: json['address'] as String,

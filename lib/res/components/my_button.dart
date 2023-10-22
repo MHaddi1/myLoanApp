@@ -7,8 +7,8 @@ class MyButton extends StatelessWidget {
   final String text;
   final VoidCallback? onTap;
 
-  MyButton({
-    Key? key,
+  const MyButton({
+    super.key,
     required this.text,
     this.onTap,
   });
