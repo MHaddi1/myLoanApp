@@ -77,7 +77,7 @@ class _EnrollSecurityState extends State<EnrollSecurity> {
               onTap: () {
                 Get.find<EnrollController>().toggleLoading();
                 enrollController.onAddEnrollData();
-                Get.toNamed(RoutesName.homePage);
+                Get.toNamed(RoutesName.loginScrren);
               },
             )
           ],

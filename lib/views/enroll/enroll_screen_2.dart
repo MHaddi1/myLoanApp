@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:main_loan_app/res/colors/color.dart';
@@ -82,6 +83,7 @@ class _EnrollScreen2State extends State<EnrollScreen2> {
                       vertical: 15, horizontal: 12.0),
                   child: SingleChildScrollView(
                     child: Form(
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
                       key: key,
                       child: Column(
                         children: [
@@ -144,6 +146,9 @@ class _EnrollScreen2State extends State<EnrollScreen2> {
                             height: 25,
                           ),
                           InternationalPhoneNumberInput(
+                            onFieldSubmitted: (value){
+                              enrollController.setPhoneNumber(value);
+                            },
                             spaceBetweenSelectorAndTextField: 0,
                             hintText: "Phone Number",
                             initialValue: enrollController.number,
@@ -177,7 +182,13 @@ class _EnrollScreen2State extends State<EnrollScreen2> {
                             height: 25.0,
                           ),
                           LoanTextField(
-                              check: (value) {},
+                              check: (value) {
+                                try{
+                                  enrollController.setZipCode(int.parse(value!));
+                                }catch(e) {
+                                  if(kDebugMode) print(e.toString());
+                                }
+                              },
                               textType: TextInputType.number,
                               msg: "Please enter Zip Code",
                               labelText: "zip_code".tr,
@@ -193,6 +204,9 @@ class _EnrollScreen2State extends State<EnrollScreen2> {
                             height: 25.0,
                           ),
                           LoanTextField(
+                            check: (value){
+                              enrollController.setAddress(value!);
+                            },
                               textType: TextInputType.streetAddress,
                               msg: "Please enter Your Address",
                               labelText: "home_address".tr,
@@ -208,6 +222,9 @@ class _EnrollScreen2State extends State<EnrollScreen2> {
                             height: 25.0,
                           ),
                           LoanTextField(
+                            check: (value){
+                              enrollController.setAddress_2(value!);
+                            },
                               textType: TextInputType.streetAddress,
                               labelText: "home_address_2".tr,
                               myController: optionalAddressController,

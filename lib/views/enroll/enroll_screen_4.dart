@@ -1,8 +1,10 @@
 import 'package:csc_picker/csc_picker.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 //import 'package:dob_input_field/dob_input_field.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:main_loan_app/models/enroll_model.dart';
 import 'package:main_loan_app/res/colors/color.dart';
 import 'package:main_loan_app/res/components/date_entry.dart';
 import 'package:main_loan_app/res/components/loan_text_field.dart';
@@ -25,6 +27,16 @@ class _EnrollScreen4State extends State<EnrollScreen4> {
   final key = GlobalKey<FormState>();
   final dateOfBirthController = TextEditingController();
   final idNubmerController = TextEditingController();
+    
+  @override
+  void initState() {
+    super.initState();
+     final enroll = enrollController.enroll.value;
+     if(enroll!=null){
+      idNubmerController.text = enroll.moreDetails.numbersDetail;
+     }
+    
+  }
   @override
   void dispose() {
     idNubmerController.dispose();
@@ -68,6 +80,12 @@ class _EnrollScreen4State extends State<EnrollScreen4> {
                         children: [
                           Obx(
                             () => DropdownButtonFormField<String>(
+                              validator: (value){
+                                if(value!.isEmpty){
+                                  return "required *";
+                                }
+                                return null;
+                              },
                               hint: const Text("Occupation"),
                               value: enrollController.selectedItem4.value,
                               icon: null,
@@ -91,6 +109,9 @@ class _EnrollScreen4State extends State<EnrollScreen4> {
                             height: 50.0,
                           ),
                           LoanTextField(
+                            check: (value){
+                              enrollController.setDetailNumber(value!);
+                            },
                             validate: (value) {
                               if (value == null || value.isEmpty) {
                                 return "Please Enter your ID Number ";
@@ -179,14 +200,33 @@ class _EnrollScreen4State extends State<EnrollScreen4> {
                 ),
                 MyButton(
                   text: "continue".tr,
-                  onTap: () {
+                  onTap: () async{
+                    //Enroll myEnroll;
                     if (key.currentState!.validate()) {
                       key.currentState!.save();
-                      Get.find<EnrollController>().toggleLoading();
+
+                      //Get.find<EnrollController>().toggleLoading();
+                      FirebaseAuth firebaseAuth;
+                      firebaseAuth = FirebaseAuth.instance;
+                      final user = firebaseAuth.currentUser;
+
+                      if(user != null){
+                         final idTokenResult = await user.getIdToken();
+                        if(idTokenResult!=null){
+
+                          enrollController.onAddEnrollData();
+                          enrollController.updateLoanStatus(user.uid, 0);
+                          Get.toNamed(RoutesName.homePage);
+                          
+                        }
+                      }else{
                       Get.toNamed(RoutesName.enrollScrren5);
                       if (kDebugMode) {
                         print("pressed");
                       }
+                      }
+
+                    
                       // Get.toNamed(RoutesName.enrollScrren2);
                     }
                   },

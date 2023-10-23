@@ -57,6 +57,7 @@ class HomePage extends StatelessWidget {
           }
 
           var loanStatus = data['loan_status'];
+          print(data);
           String statusText = "";
           IconData iconData = Icons.home;
           Color textColor = Colors.black;

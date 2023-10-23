@@ -26,6 +26,17 @@ class _EnrollScreen3State extends State<EnrollScreen3> {
   final erpirationController = TextEditingController();
 
   @override
+  void initState() {
+    
+    super.initState();
+    final enroll = enrollController.enroll.value;
+    ssnController.text = enroll!.enrollLiving.ssn??"";
+    itinController.text = enroll.enrollLiving.itin??"";
+    //enrollController.updateCountry(enroll.enrollLiving.country);
+
+  }
+
+  @override
   void dispose() {
     itinController.dispose();
     erpirationController.dispose();
@@ -132,6 +143,9 @@ class _EnrollScreen3State extends State<EnrollScreen3> {
                           ),
                           Obx(
                             () => LoanTextField(
+                              check: (value){
+                                enrollController.setPersonalNumber(value!);
+                              },
                                 textType: TextInputType.text,
                                 msg: enrollController.isFirstRadioSelected.value
                                     ? "Please enter Socail Security Number"
@@ -188,6 +202,12 @@ class _EnrollScreen3State extends State<EnrollScreen3> {
                           ),
                           Obx(
                             () => DropdownButtonFormField<String>(
+                              validator: (value){
+                                if(value!.isEmpty){
+                                  return "Not Empty field";
+                                }
+                                return null;
+                              },
                               hint: const Text("Citizen Ship"),
                               value: enrollController.selectedItem3.value,
                               icon: null,

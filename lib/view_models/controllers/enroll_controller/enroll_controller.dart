@@ -86,6 +86,8 @@ class EnrollController extends GetxController {
   RxInt zipcode = 0.obs;
   RxString address1 = ''.obs;
   RxString addressO = ''.obs;
+  RxString personalNumber = ''.obs;
+  RxString detailNumber = ''.obs;
 
   void setFName(String firstName) {
     fname.value = firstName;
@@ -117,6 +119,13 @@ class EnrollController extends GetxController {
 
   void setPhoneNumber(String value) {
     phoneNumber.value = value;
+  }
+
+  void setPersonalNumber(String value) {
+    personalNumber.value = value;
+  }
+  void setDetailNumber(String value) {
+    detailNumber.value = value;
   }
 
   var emailIsValid = RxBool(false);
@@ -255,6 +264,9 @@ class EnrollController extends GetxController {
   String get aDDress => address1.value;
   String get aDDressO => addressO.value;
   int get zipCode => zipcode.value;
+  String get myNumber => personalNumber.value;
+  String get myDetailNumber => detailNumber.value;
+  String get pass => password.value;
 
   void onAddEnrollData() {
     Enroll enroll = Enroll(
@@ -277,18 +289,26 @@ class EnrollController extends GetxController {
         city: city,
         jobT: worktype,
         livingPlace: living,
-        ssn: "",
-        itin: "",
+        ssn: myNumber,
+        itin: myNumber,
       ),
       moreDetails: MoreDetails(
-        numbersDetail: "",
+        numbersDetail: myDetailNumber,
         idType: idNumber,
         state: state,
         issuedDate: '12/12/2023',
       ),
     );
 
-    addEnrollData(enroll);
+    FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+
+    final user = firebaseAuth.currentUser;
+    if(user!=null){
+      addEnrollData(enroll);
+    }else{
+      createUserAccount(eMail, pass);
+    }
+
   }
 
   Future<void> createUserAccount(String email, String password) async {
