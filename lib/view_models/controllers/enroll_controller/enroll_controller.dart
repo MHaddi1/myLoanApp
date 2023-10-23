@@ -22,6 +22,10 @@ class EnrollController extends GetxController {
   var phoneNumberIsValid = false.obs;
   var formattedPhoneNumber = ''.obs;
 
+    final CollectionReference collection =
+        FirebaseFirestore.instance.collection('enrollments');
+    
+
   Rx<DateTime> selectedDate = DateTime.now().obs;
 
   var selectedItem = 'Phone Number'.obs;
@@ -248,6 +252,31 @@ class EnrollController extends GetxController {
     }
   }
 
+  Future<void> updateEnrollData(String documentId, Enroll enroll) async {
+  try {
+         
+    final Map<String, dynamic> enrollData = enroll.toJson();
+
+    await _firestore
+        .collection('enrollments')
+        .doc(documentId)
+        .update(enrollData);
+
+    Get.snackbar("Success", "Data updated in Firestore successfully",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.green,
+        colorText: Colors.white);
+  } catch (error) {
+    Get.snackbar(
+      "Error",
+      "Failed to update data in Firestore: $error",
+      backgroundColor: Colors.red,
+      snackPosition: SnackPosition.BOTTOM,
+    );
+  }
+}
+
+
   String get country => countryValue.value;
   String get city => cityValue.value;
   String get state => stateValue.value;
@@ -268,7 +297,7 @@ class EnrollController extends GetxController {
   String get myDetailNumber => detailNumber.value;
   String get pass => password.value;
 
-  void onAddEnrollData() {
+  void onAddEnrollData() async{
     Enroll enroll = Enroll(
       user: EnrollUser(
         fname: fName,
@@ -301,11 +330,16 @@ class EnrollController extends GetxController {
     );
 
     FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+     var collectionReference =
+        FirebaseFirestore.instance.collection("enrollments");
+    var allData = await collectionReference.get();
+    var dId = allData.docs.last.id;
 
     final user = firebaseAuth.currentUser;
     if(user!=null){
-      addEnrollData(enroll);
+      updateEnrollData(dId,enroll);
     }else{
+       addEnrollData(enroll);
       createUserAccount(eMail, pass);
     }
 
@@ -332,6 +366,8 @@ class EnrollController extends GetxController {
       Utils.snackBar("error", e.toString());
     }
   }
+
+
 
   Future<void> updateLoanStatus(String userId, int newStatus) async {
     try {
@@ -376,10 +412,8 @@ class EnrollController extends GetxController {
 
   Future<String?> getDocumentIdFromFirebase(String searchEmail) async {
     isLoading.value = true;
-    final CollectionReference collection =
-        FirebaseFirestore.instance.collection('enrollments');
-    final QuerySnapshot querySnapshot = await collection.get();
-
+  
+final QuerySnapshot querySnapshot = await collection.get();
     if (querySnapshot.docs.isNotEmpty) {
       return querySnapshot.docs.first.id;
     }
