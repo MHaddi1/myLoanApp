@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:main_loan_app/res/colors/color.dart';
 import 'package:main_loan_app/res/components/loan_text_field.dart';
 import 'package:main_loan_app/res/components/my_button.dart';
+import 'package:main_loan_app/res/routes/routes_name.dart';
 import 'package:main_loan_app/view_models/controllers/home_controller/home_controller.dart';
 
 class LoanApplied extends StatefulWidget {
@@ -21,16 +22,20 @@ class _LoanAppliedState extends State<LoanApplied> {
   final reason = TextEditingController();
   final key = GlobalKey<FormState>();
   final homeController = Get.find<HomeController>();
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   void dispose() {
     business.dispose();
     businessAdress.dispose();
     deadLine.dispose();
     amount.dispose();
-    business.clear();
-    businessAdress.clear();
-    deadLine.clear();
-    amount.clear();
+    reason.dispose();
+
     super.dispose();
   }
 
@@ -233,8 +238,8 @@ class _LoanAppliedState extends State<LoanApplied> {
                   onTap: () {
                     if (key.currentState!.validate()) {
                       key.currentState!.save();
-
                       homeController.addLoanAmount();
+                      Get.offAndToNamed(RoutesName.homePage);
 
                       //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomePage()));
                     }
@@ -246,24 +251,5 @@ class _LoanAppliedState extends State<LoanApplied> {
         ),
       ),
     );
-  }
-
-  Future<void> _selectDate(
-      BuildContext context, HomeController controller) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: controller.selectedDate.value,
-      firstDate: DateTime(1978),
-      lastDate: DateTime(2101),
-      initialEntryMode: DatePickerEntryMode.calendar,
-    );
-
-    if (picked != null) {
-      controller.selectedDate.value = picked;
-      controller.selectDate(picked);
-
-      final formattedDate = DateFormat('MM/dd/yyyy').format(picked);
-      deadLine.text = formattedDate;
-    }
   }
 }

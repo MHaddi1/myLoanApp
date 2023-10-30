@@ -43,25 +43,29 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         actions: [
           IconButton(
-              onPressed: () {
-                Get.defaultDialog(
-                    title: "Logout",
-                    content: const Text("Do You Want to logout"),
-                    confirm: TextButton(
-                        onPressed: () {
-                          userPreference.clearUserToken().then((value) {
-                            Get.toNamed(RoutesName.loginScrren);
-                            Utils.showToastMessage("Logout Successfull..");
-                          });
-                        },
-                        child: const Text("Yes")),
-                    cancel: TextButton(
-                        onPressed: () {
-                          Get.back();
-                        },
-                        child: const Text("No")));
-              },
-              icon: const Icon(Icons.logout))
+            onPressed: () {
+              Get.defaultDialog(
+                title: "Logout",
+                content: const Text("Do You Want to logout"),
+                confirm: TextButton(
+                  onPressed: () {
+                    userPreference.clearUserToken().then((value) {
+                      Get.toNamed(RoutesName.loginScrren);
+                      Utils.showToastMessage("Logout Successful..");
+                    });
+                  },
+                  child: const Text("Yes"),
+                ),
+                cancel: TextButton(
+                  onPressed: () {
+                    Get.back();
+                  },
+                  child: const Text("No"),
+                ),
+              );
+            },
+            icon: const Icon(Icons.logout),
+          )
         ],
       ),
       body: StreamBuilder<DocumentSnapshot>(
@@ -81,8 +85,13 @@ class _HomePageState extends State<HomePage> {
           }
 
           var loanStatus = data['loan_status'];
-          print(data);
-          String statusText = "";
+          var newStatus = data['new_status']; 
+
+          if (newStatus != null) {
+            loanStatus = newStatus;
+          }
+
+          var statusText = "";
           IconData iconData = Icons.home;
           Color textColor = Colors.black;
           String message = "";
@@ -182,99 +191,12 @@ class _HomePageState extends State<HomePage> {
                             ],
                           ),
                         ),
-                        Text("Your Cradit: ${data['amount']}\$"),
                       ],
                     ),
                   ),
                 ),
                 const SizedBox(
                   height: 10,
-                ),
-                Container(
-                  height: Get.height * 0.30,
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(20),
-                          topRight: Radius.circular(20),
-                          bottomRight: Radius.circular(12),
-                          bottomLeft: Radius.circular(12)),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
-                          spreadRadius: 4,
-                          blurRadius: 3,
-                          offset: const Offset(0, 3),
-                        ),
-                      ]),
-                  child: const SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        // Padding(
-                        //   padding: const EdgeInsets.all(8.0),
-                        //   child: Column(
-                        //     mainAxisAlignment: MainAxisAlignment.end,
-                        //     children: [
-                        //       SizedBox(
-                        //         height: Get.height * 0.05,
-                        //       ),
-                        //       if (showTextField)
-                        //         Container(
-                        //           decoration: BoxDecoration(
-                        //             color: Colors.white,
-                        //             borderRadius: BorderRadius.circular(12),
-                        //             boxShadow: const [
-                        //               BoxShadow(
-                        //                 color: Colors.black45,
-                        //                 blurRadius: 6,
-                        //                 offset: Offset(0, 2),
-                        //               ),
-                        //             ],
-                        //           ),
-                        //           alignment: Alignment.topCenter,
-                        //           child: LoanTextField(
-                        //             maxLength: 4,
-                        //             suffixIconData: Icons.monetization_on_outlined,
-                        //             myController: amount,
-                        //             hintText: 'Enter Amount',
-                        //             textType: TextInputType.number,
-                        //           ),
-                        //         ),
-
-                        //       const SizedBox(
-                        //         height: 15,
-                        //       ),
-                        //       MyButton(
-                        //         text: "Submit You Amount",
-                        //         onTap: () async {
-                        //           String myAmount = amount.text;
-                        //           var collectionReference = FirebaseFirestore
-                        //               .instance
-                        //               .collection("loan_accounts");
-                        //           var allData = await collectionReference.get();
-
-                        //           if (allData.docs.isNotEmpty) {
-
-                        //             var dId = allData.docs.last.id;
-
-                        //             homeController.updateAmount(dId, myAmount);
-
-                        //             showTextField = false;
-                        //           } else {
-
-                        //             print(
-                        //                 "The 'loan_amounts' collection is empty.");
-                        //           }
-                        //         },
-                        //       ),
-                        //     ],
-                        //   ),
-                        // ),
-
-                        //LoanTextField(myController: loanStatus.to, hintText: "", textType: TextInputType.number),
-                      ],
-                    ),
-                  ),
                 ),
                 if (showTextField)
                   MyButton(

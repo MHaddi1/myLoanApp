@@ -25,16 +25,24 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.blue[400],
-      body: const Column(
+      body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          CircularProgressIndicator(
+          Image.network(
+            "https://images.sftcdn.net/images/t_app-icon-m/p/56e4b038-3f90-406f-a6f7-57a5a418f361/2594640530/smart-loan-payday-loans-app-logo",
+            height: 100,
+          ),
+          const CircularProgressIndicator(
             color: Colors.white,
           ),
-          Center(
-            child: Text(
-              "Welcome Back...",
-              style: TextStyle(color: Colors.white, fontSize: 25),
+          const Center(
+            child: Column(
+              children: [
+                Text(
+                  "Welcome Back...",
+                  style: TextStyle(color: Colors.white, fontSize: 25),
+                ),
+              ],
             ),
           ),
         ],

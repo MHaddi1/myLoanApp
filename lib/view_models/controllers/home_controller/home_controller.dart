@@ -11,6 +11,9 @@ class HomeController extends GetxController {
   RxString reason = ''.obs;
   RxString selectedItem2 = '5 Year'.obs;
   RxString interest = ''.obs;
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  RxInt displayValue = RxInt(0);
+
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   void selectDate(DateTime date) {
@@ -40,7 +43,7 @@ class HomeController extends GetxController {
   DateTime get appliedDate => selectedDate.value;
   String get mybusinessName => businessNames.value;
   String get mybusinessAddress => businessAddress.value;
-  String get myAmount => amount.value;
+  int get myAmount => int.parse(amount.value);
   String get myReason => reason.value;
   String get mySelectedItem2 => selectedItem2.value;
 
@@ -59,7 +62,8 @@ class HomeController extends GetxController {
         'applied_date': loanAccount.appliedDate,
         'business_name': loanAccount.businessName,
         'business_address': loanAccount.businessAdress,
-        'reason': loanAccount.reason
+        'reason': loanAccount.reason,
+        'new_status': loanAccount.newStatus
       });
       Utils.snackBar("Success", "Amount updated in Firestore successfully");
     } catch (e) {
@@ -79,6 +83,7 @@ class HomeController extends GetxController {
       businessAdress: mybusinessAddress,
       appliedDate: appliedDate,
       reason: myReason,
+      newStatus: 0,
       otherUserInfo: {
         'name': '',
         'phone': '',
@@ -94,5 +99,25 @@ class HomeController extends GetxController {
     var allData = await collectionReference.get();
     var dId = allData.docs.last.id;
     updateAmount(dId, loanAccount);
+  }
+
+  Future<void> statusCode() async {
+    try {
+      final document = await _firestore.collection('').doc('').get();
+
+      if (document.exists) {
+        final data = document.data() as Map<String, dynamic>;
+
+        if (data.containsKey('newStatus') && data['newStatus'] != null) {
+          displayValue.value = data['newStatus'];
+        } else {
+          displayValue.value = data['loanStatus'];
+        }
+      } else {
+        print('Document does not exist.');
+      }
+    } catch (e) {
+      print('Error retrieving data from Firebase: $e');
+    }
   }
 }
