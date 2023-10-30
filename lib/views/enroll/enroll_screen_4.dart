@@ -1,17 +1,14 @@
 import 'package:csc_picker/csc_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-//import 'package:dob_input_field/dob_input_field.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:main_loan_app/models/enroll_model.dart';
 import 'package:main_loan_app/res/colors/color.dart';
 import 'package:main_loan_app/res/components/date_entry.dart';
 import 'package:main_loan_app/res/components/loan_text_field.dart';
 import 'package:main_loan_app/res/components/my_button.dart';
 import 'package:main_loan_app/res/routes/routes_name.dart';
 import 'package:main_loan_app/view_models/controllers/enroll_controller/enroll_controller.dart';
-// import 'package:main_loan_app/res/routes/routes_name.dart';
 import 'package:main_loan_app/view_models/controllers/page_controller/page_controller.dart';
 
 class EnrollScreen4 extends StatefulWidget {
@@ -27,16 +24,17 @@ class _EnrollScreen4State extends State<EnrollScreen4> {
   final key = GlobalKey<FormState>();
   final dateOfBirthController = TextEditingController();
   final idNubmerController = TextEditingController();
-    
+  final amount = TextEditingController();
+
   @override
   void initState() {
     super.initState();
-     final enroll = enrollController.enroll.value;
-     if(enroll!=null){
+    final enroll = enrollController.enroll.value;
+    if (enroll != null) {
       idNubmerController.text = enroll.moreDetails.numbersDetail;
-     }
-    
+    }
   }
+
   @override
   void dispose() {
     idNubmerController.dispose();
@@ -80,8 +78,8 @@ class _EnrollScreen4State extends State<EnrollScreen4> {
                         children: [
                           Obx(
                             () => DropdownButtonFormField<String>(
-                              validator: (value){
-                                if(value!.isEmpty){
+                              validator: (value) {
+                                if (value!.isEmpty) {
                                   return "required *";
                                 }
                                 return null;
@@ -109,7 +107,7 @@ class _EnrollScreen4State extends State<EnrollScreen4> {
                             height: 50.0,
                           ),
                           LoanTextField(
-                            check: (value){
+                            check: (value) {
                               enrollController.setDetailNumber(value!);
                             },
                             validate: (value) {
@@ -200,7 +198,7 @@ class _EnrollScreen4State extends State<EnrollScreen4> {
                 ),
                 MyButton(
                   text: "continue".tr,
-                  onTap: () async{
+                  onTap: () async {
                     //Enroll myEnroll;
                     if (key.currentState!.validate()) {
                       key.currentState!.save();
@@ -210,23 +208,21 @@ class _EnrollScreen4State extends State<EnrollScreen4> {
                       firebaseAuth = FirebaseAuth.instance;
                       final user = firebaseAuth.currentUser;
 
-                      if(user != null){
-                         final idTokenResult = await user.getIdToken();
-                        if(idTokenResult!=null){
-
+                      if (user != null) {
+                        final idTokenResult = await user.getIdToken();
+                        if (idTokenResult != null) {
                           enrollController.onAddEnrollData();
                           enrollController.updateLoanStatus(user.uid, 0);
                           Get.toNamed(RoutesName.homePage);
-                          
                         }
-                      }else{
-                      Get.toNamed(RoutesName.enrollScrren5);
-                      if (kDebugMode) {
-                        print("pressed");
-                      }
+                      } else {
+                        enrollController.onAddEnrollData();
+                        Get.toNamed(RoutesName.enrollScrren5);
+                        if (kDebugMode) {
+                          print("pressed");
+                        }
                       }
 
-                    
                       // Get.toNamed(RoutesName.enrollScrren2);
                     }
                   },

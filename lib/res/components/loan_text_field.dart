@@ -18,6 +18,7 @@ class LoanTextField extends StatelessWidget {
   final String? errorMessage;
   final Function(Focus)? focus;
   final AutovalidateMode? autovalidateMode;
+  final int? maxLines;
 
   const LoanTextField(
       {super.key,
@@ -36,12 +37,13 @@ class LoanTextField extends StatelessWidget {
       this.check,
       this.errorMessage,
       this.focus,
-      this.autovalidateMode});
+      this.autovalidateMode,
+      this.maxLines});
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-     
+      maxLines: maxLines,
       maxLength: maxLength,
       autovalidateMode: autovalidateMode,
       onChanged: check,
@@ -58,6 +60,7 @@ class LoanTextField extends StatelessWidget {
         labelText: labelText, // Optional label text
         hintText: hintText,
         enabledBorder: OutlineInputBorder(
+          
           borderSide: BorderSide(color: Colors.grey.shade200),
         ),
         focusedBorder: const OutlineInputBorder(

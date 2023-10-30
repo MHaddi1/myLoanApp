@@ -18,7 +18,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     splashService.isLogin();
-    enrollController.fetchData();
+    //enrollController.fetchData();
   }
 
   @override

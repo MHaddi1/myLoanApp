@@ -297,6 +297,8 @@ class EnrollController extends GetxController {
   String get myDetailNumber => detailNumber.value;
   String get pass => password.value;
 
+  
+
   void onAddEnrollData() async{
     Enroll enroll = Enroll(
       user: EnrollUser(
@@ -328,7 +330,7 @@ class EnrollController extends GetxController {
         issuedDate: '12/12/2023',
       ),
     );
-
+try{
     FirebaseAuth firebaseAuth = FirebaseAuth.instance;
      var collectionReference =
         FirebaseFirestore.instance.collection("enrollments");
@@ -339,9 +341,13 @@ class EnrollController extends GetxController {
     if(user!=null){
       updateEnrollData(dId,enroll);
     }else{
-       addEnrollData(enroll);
+      addEnrollData(enroll);
       createUserAccount(eMail, pass);
     }
+}catch(e){
+_debugPrint(e.toString());
+}
+
 
   }
 
@@ -424,7 +430,7 @@ final QuerySnapshot querySnapshot = await collection.get();
   final Rx<Enroll?> enroll = Rx<Enroll?>(null);
 
   Future<void> fetchData() async {
-    isLoading.value = true;
+    //isLoading.value = true;
     var collectionReference =
         FirebaseFirestore.instance.collection("enrollments");
     var allData = await collectionReference.get();

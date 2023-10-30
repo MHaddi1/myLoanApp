@@ -146,7 +146,7 @@ class _EnrollScreen2State extends State<EnrollScreen2> {
                             height: 25,
                           ),
                           InternationalPhoneNumberInput(
-                            onFieldSubmitted: (value){
+                            onFieldSubmitted: (value) {
                               enrollController.setPhoneNumber(value);
                             },
                             spaceBetweenSelectorAndTextField: 0,
@@ -183,10 +183,11 @@ class _EnrollScreen2State extends State<EnrollScreen2> {
                           ),
                           LoanTextField(
                               check: (value) {
-                                try{
-                                  enrollController.setZipCode(int.parse(value!));
-                                }catch(e) {
-                                  if(kDebugMode) print(e.toString());
+                                try {
+                                  enrollController
+                                      .setZipCode(int.parse(value!));
+                                } catch (e) {
+                                  if (kDebugMode) print(e.toString());
                                 }
                               },
                               textType: TextInputType.number,
@@ -204,9 +205,9 @@ class _EnrollScreen2State extends State<EnrollScreen2> {
                             height: 25.0,
                           ),
                           LoanTextField(
-                            check: (value){
-                              enrollController.setAddress(value!);
-                            },
+                              check: (value) {
+                                enrollController.setAddress(value!);
+                              },
                               textType: TextInputType.streetAddress,
                               msg: "Please enter Your Address",
                               labelText: "home_address".tr,
@@ -222,9 +223,9 @@ class _EnrollScreen2State extends State<EnrollScreen2> {
                             height: 25.0,
                           ),
                           LoanTextField(
-                            check: (value){
-                              enrollController.setAddress_2(value!);
-                            },
+                              check: (value) {
+                                enrollController.setAddress_2(value!);
+                              },
                               textType: TextInputType.streetAddress,
                               labelText: "home_address_2".tr,
                               myController: optionalAddressController,

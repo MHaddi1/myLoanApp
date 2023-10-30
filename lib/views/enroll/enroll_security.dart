@@ -75,8 +75,9 @@ class _EnrollSecurityState extends State<EnrollSecurity> {
             MyButton(
               text: "Confirm",
               onTap: () {
-                Get.find<EnrollController>().toggleLoading();
+                //Get.find<EnrollController>().toggleLoading();
                 enrollController.onAddEnrollData();
+                ///enrollController.createUserAccount(enrollController.eMail, enrollController.p);
                 Get.toNamed(RoutesName.loginScrren);
               },
             )

@@ -27,13 +27,15 @@ class _EnrollScreen3State extends State<EnrollScreen3> {
 
   @override
   void initState() {
-    
     super.initState();
     final enroll = enrollController.enroll.value;
-    ssnController.text = enroll!.enrollLiving.ssn??"";
-    itinController.text = enroll.enrollLiving.itin??"";
-    //enrollController.updateCountry(enroll.enrollLiving.country);
-
+    if (enroll != null) {
+      ssnController.text = enroll.enrollLiving.ssn ?? "";
+      itinController.text = enroll.enrollLiving.itin ?? "";
+      enrollController.updateCountry(enroll.enrollLiving.country);
+      enrollController.updateState(enroll.enrollLiving.state);
+      enrollController.updateCity(enroll.enrollLiving.city);
+    }
   }
 
   @override
@@ -143,9 +145,9 @@ class _EnrollScreen3State extends State<EnrollScreen3> {
                           ),
                           Obx(
                             () => LoanTextField(
-                              check: (value){
-                                enrollController.setPersonalNumber(value!);
-                              },
+                                check: (value) {
+                                  enrollController.setPersonalNumber(value!);
+                                },
                                 textType: TextInputType.text,
                                 msg: enrollController.isFirstRadioSelected.value
                                     ? "Please enter Socail Security Number"
@@ -202,8 +204,8 @@ class _EnrollScreen3State extends State<EnrollScreen3> {
                           ),
                           Obx(
                             () => DropdownButtonFormField<String>(
-                              validator: (value){
-                                if(value!.isEmpty){
+                              validator: (value) {
+                                if (value!.isEmpty) {
                                   return "Not Empty field";
                                 }
                                 return null;

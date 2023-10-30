@@ -5,6 +5,7 @@ import 'package:main_loan_app/views/enroll/enroll_screen_2.dart';
 import 'package:main_loan_app/views/enroll/enroll_screen_4.dart';
 import 'package:main_loan_app/views/enroll/enroll_security.dart';
 import 'package:main_loan_app/views/home/home_page.dart';
+import 'package:main_loan_app/views/loan_applied/loan_applied.dart';
 import 'package:main_loan_app/views/login/login_screeen.dart';
 import 'package:main_loan_app/views/splash_screen.dart';
 
@@ -50,6 +51,11 @@ class AppRoutes {
           name: RoutesName.homePage,
           page: () => const HomePage(),
           transition: Transition.leftToRight,
-        )
+        ),
+        GetPage(
+          name: RoutesName.loanApplied,
+          page: () => const LoanApplied(),
+          transition: Transition.leftToRight,
+        ),
       ];
 }

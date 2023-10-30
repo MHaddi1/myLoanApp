@@ -7,4 +7,5 @@ class RoutesName {
   static const String enrollScrren4 = "/enroll_screen_4";
   static const String enrollScrren5 = "/enroll_screen_5";
   static const String homePage = "/home_page";
+  static const String loanApplied = "/loan_applied";
 }
