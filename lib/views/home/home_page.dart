@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:main_loan_app/res/components/my_button.dart';
@@ -24,7 +25,6 @@ class _HomePageState extends State<HomePage> {
   @override
   void dispose() {
     amount.dispose();
-    amount.clear();
     super.dispose();
   }
 
@@ -32,6 +32,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     enrollController.fetchData();
+    homeController.fetchData();
   }
 
   @override
@@ -41,6 +42,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       backgroundColor: Colors.blue[300],
       appBar: AppBar(
+        leading: const Icon(null),
         actions: [
           IconButton(
             onPressed: () {
@@ -50,7 +52,7 @@ class _HomePageState extends State<HomePage> {
                 confirm: TextButton(
                   onPressed: () {
                     userPreference.clearUserToken().then((value) {
-                      Get.toNamed(RoutesName.loginScrren);
+                      Get.offAllNamed(RoutesName.loginScrren);
                       Utils.showToastMessage("Logout Successful..");
                     });
                   },
@@ -85,10 +87,11 @@ class _HomePageState extends State<HomePage> {
           }
 
           var loanStatus = data['loan_status'];
-          var newStatus = data['new_status']; 
+          var newStatus = data['new_status'];
 
           if (newStatus != null) {
             loanStatus = newStatus;
+            print(loanStatus);
           }
 
           var statusText = "";
@@ -98,13 +101,14 @@ class _HomePageState extends State<HomePage> {
           IconData statusIcons = Icons.check_box;
           bool showReSubmitButton = false;
           bool showTextField = false;
+          //bool showSubmitButton = false;
 
           if (loanStatus == 0) {
             iconData = Icons.question_mark;
             textColor = Colors.orange;
             statusText = "Pending";
             message =
-                "We Are Working on Your Loan Request\n We will update your status within 7\n working days";
+                "We Are Working on Your Loan Request\nWe will update your status within 7\nworking days";
             statusIcons = Icons.question_answer;
           } else if (loanStatus == 1) {
             iconData = Icons.check;
@@ -113,6 +117,9 @@ class _HomePageState extends State<HomePage> {
             message = "Approved";
             statusIcons = Icons.check_box;
             showTextField = true;
+            if (newStatus == 2) {
+              //showSubmitButton = true;
+            }
           } else if (loanStatus == 2) {
             iconData = Icons.warning;
             textColor = Colors.red;
@@ -210,10 +217,19 @@ class _HomePageState extends State<HomePage> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       MyButton(
-                        text: "ReSubmit Application",
-                        onTap: () {
-                          Get.toNamed(RoutesName.enrollScrren1);
-                        },
+                        text: newStatus == null
+                            ? "ReSubmit Application"
+                            : "Loan ReSubmit Application",
+                        onTap: newStatus == null
+                            ? () {
+                                Get.toNamed(RoutesName.enrollScrren1);
+                              }
+                            : () {
+                                if (kDebugMode) {
+                                  //homeController.fetchData();
+                                  Get.toNamed(RoutesName.loanApplied);
+                                }
+                              },
                       ),
                     ],
                   ),

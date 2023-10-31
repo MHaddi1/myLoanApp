@@ -8,8 +8,8 @@ import 'package:main_loan_app/views/home/home_page.dart';
 import 'package:main_loan_app/views/loan_applied/loan_applied.dart';
 import 'package:main_loan_app/views/login/login_screeen.dart';
 import 'package:main_loan_app/views/splash_screen.dart';
-
 import '../../views/enroll/enroll_screen_3.dart';
+
 
 class AppRoutes {
   static appRoutes() => [

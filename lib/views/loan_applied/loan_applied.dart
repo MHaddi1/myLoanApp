@@ -1,6 +1,7 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 import 'package:main_loan_app/res/colors/color.dart';
 import 'package:main_loan_app/res/components/loan_text_field.dart';
 import 'package:main_loan_app/res/components/my_button.dart';
@@ -16,7 +17,7 @@ class LoanApplied extends StatefulWidget {
 
 class _LoanAppliedState extends State<LoanApplied> {
   final business = TextEditingController();
-  final businessAdress = TextEditingController();
+  final businessAddress = TextEditingController();
   final deadLine = TextEditingController();
   final amount = TextEditingController();
   final reason = TextEditingController();
@@ -26,12 +27,19 @@ class _LoanAppliedState extends State<LoanApplied> {
   @override
   void initState() {
     super.initState();
+    final loan = homeController.loan.value;
+    if (loan != null) {
+      business.text = loan.businessName ?? "";
+      businessAddress.text = loan.businessAdress ?? "Business Address";
+      amount.text = loan.amount.toString();
+      reason.text = loan.reason ?? "My Reason";
+    }
   }
 
   @override
   void dispose() {
     business.dispose();
-    businessAdress.dispose();
+    businessAddress.dispose();
     deadLine.dispose();
     amount.dispose();
     reason.dispose();
@@ -110,7 +118,7 @@ class _LoanAppliedState extends State<LoanApplied> {
                               }
                               return null;
                             },
-                            myController: businessAdress,
+                            myController: businessAddress,
                             hintText: "Enter Your Business Address",
                             textType: TextInputType.streetAddress),
                       ),
@@ -182,7 +190,7 @@ class _LoanAppliedState extends State<LoanApplied> {
                             ]),
                         child: LoanTextField(
                             check: (value) {
-                              homeController.amount(value!);
+                              homeController.amount(int.parse(value!));
                             },
                             maxLength: 4,
                             validate: (value) {

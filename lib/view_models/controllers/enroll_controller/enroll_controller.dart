@@ -22,9 +22,8 @@ class EnrollController extends GetxController {
   var phoneNumberIsValid = false.obs;
   var formattedPhoneNumber = ''.obs;
 
-    final CollectionReference collection =
-        FirebaseFirestore.instance.collection('enrollments');
-    
+  final CollectionReference collection =
+      FirebaseFirestore.instance.collection('enrollments');
 
   Rx<DateTime> selectedDate = DateTime.now().obs;
 
@@ -128,6 +127,7 @@ class EnrollController extends GetxController {
   void setPersonalNumber(String value) {
     personalNumber.value = value;
   }
+
   void setDetailNumber(String value) {
     detailNumber.value = value;
   }
@@ -253,29 +253,27 @@ class EnrollController extends GetxController {
   }
 
   Future<void> updateEnrollData(String documentId, Enroll enroll) async {
-  try {
-         
-    final Map<String, dynamic> enrollData = enroll.toJson();
+    try {
+      final Map<String, dynamic> enrollData = enroll.toJson();
 
-    await _firestore
-        .collection('enrollments')
-        .doc(documentId)
-        .update(enrollData);
+      await _firestore
+          .collection('enrollments')
+          .doc(documentId)
+          .update(enrollData);
 
-    Get.snackbar("Success", "Data updated in Firestore successfully",
+      Get.snackbar("Success", "Data updated in Firestore successfully",
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.green,
+          colorText: Colors.white);
+    } catch (error) {
+      Get.snackbar(
+        "Error",
+        "Failed to update data in Firestore: $error",
+        backgroundColor: Colors.red,
         snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.green,
-        colorText: Colors.white);
-  } catch (error) {
-    Get.snackbar(
-      "Error",
-      "Failed to update data in Firestore: $error",
-      backgroundColor: Colors.red,
-      snackPosition: SnackPosition.BOTTOM,
-    );
+      );
+    }
   }
-}
-
 
   String get country => countryValue.value;
   String get city => cityValue.value;
@@ -297,9 +295,7 @@ class EnrollController extends GetxController {
   String get myDetailNumber => detailNumber.value;
   String get pass => password.value;
 
-  
-
-  void onAddEnrollData() async{
+  void onAddEnrollData() async {
     Enroll enroll = Enroll(
       user: EnrollUser(
         fname: fName,
@@ -330,25 +326,23 @@ class EnrollController extends GetxController {
         issuedDate: '12/12/2023',
       ),
     );
-try{
-    FirebaseAuth firebaseAuth = FirebaseAuth.instance;
-     var collectionReference =
-        FirebaseFirestore.instance.collection("enrollments");
-    var allData = await collectionReference.get();
-    var dId = allData.docs.last.id;
+    try {
+      FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+      var collectionReference =
+          FirebaseFirestore.instance.collection("enrollments");
+      var allData = await collectionReference.get();
+      var dId = allData.docs.last.id;
 
-    final user = firebaseAuth.currentUser;
-    if(user!=null){
-      updateEnrollData(dId,enroll);
-    }else{
-      addEnrollData(enroll);
-      createUserAccount(eMail, pass);
+      final user = firebaseAuth.currentUser;
+      if (user != null) {
+        updateEnrollData(dId, enroll);
+      } else {
+        addEnrollData(enroll);
+        createUserAccount(eMail, pass);
+      }
+    } catch (e) {
+      _debugPrint(e.toString());
     }
-}catch(e){
-_debugPrint(e.toString());
-}
-
-
   }
 
   Future<void> createUserAccount(String email, String password) async {
@@ -372,8 +366,6 @@ _debugPrint(e.toString());
       Utils.snackBar("error", e.toString());
     }
   }
-
-
 
   Future<void> updateLoanStatus(String userId, int newStatus) async {
     try {
@@ -418,8 +410,8 @@ _debugPrint(e.toString());
 
   Future<String?> getDocumentIdFromFirebase(String searchEmail) async {
     isLoading.value = true;
-  
-final QuerySnapshot querySnapshot = await collection.get();
+
+    final QuerySnapshot querySnapshot = await collection.get();
     if (querySnapshot.docs.isNotEmpty) {
       return querySnapshot.docs.first.id;
     }
@@ -445,6 +437,22 @@ final QuerySnapshot querySnapshot = await collection.get();
           docSnapshot.data() as Map<String, dynamic>,
         );
         enroll.value = response;
+        if (enroll.value != null) {
+          setFName(enroll.value!.user.fname);
+          setLName(enroll.value!.user.lname);
+          setMiddle(enroll.value!.user.middleName!);
+          setDate(enroll.value!.user.dob);
+          validateEmail(enroll.value!.enrollDetails.email);
+          setPhoneNumber(enroll.value!.enrollDetails.phone);
+          setZipCode(enroll.value!.enrollDetails.zipcode);
+          setAddress(enroll.value!.enrollDetails.address);
+          setAddress_2(enroll.value!.enrollDetails.optionalAddress!);
+          updateCountry(enroll.value!.enrollLiving.country);
+          updateState(enroll.value!.enrollLiving.state);
+          updateCity(enroll.value!.enrollLiving.city);
+          setDetailNumber(enroll.value!.enrollLiving.ssn!);
+          setDetailNumber(enroll.value!.enrollLiving.itin!);
+        }
       } else {
         _debugPrint("Document not exists");
       }

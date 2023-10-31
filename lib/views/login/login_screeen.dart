@@ -60,6 +60,7 @@ class _LoginScreenState extends State<LoginScreen> {
             width: Get.width,
             height: Get.height,
             child: Form(
+              autovalidateMode: AutovalidateMode.onUserInteraction,
               key: _key,
               child: Column(
                 children: [
@@ -108,34 +109,19 @@ class _LoginScreenState extends State<LoginScreen> {
                                     if (value.length <= 5 &&
                                         value.length >= 15) {
                                       return "You Username must be at least 5 and Maximum is 15";
+                                    } else if (!value.isEmail) {
+                                      return "Enter Valid Email";
+                                    } else {
+                                      return null;
                                     }
                                   }
-
-                                  return null;
                                 },
-                                minLength: 5,
-                                maxLength: 15,
-                                autovalidateMode:
-                                    AutovalidateMode.onUserInteraction,
 
                                 textType: TextInputType.name,
                                 msg: "Please Enter username",
                                 // minLength: 5,
                                 // maxLength: 15,
                                 onPressed: () {},
-                                // check: (value) {
-                                //   loginController.userNameValidation(
-                                //       value!, 5, 15);
-                                // },
-                                // validate: (value) {
-                                //   if (value == null || value.isEmpty) {
-                                //     return "Please Enter your first name";
-                                //   } else if (value.length <= 2 &&
-                                //       value.length >= 15) {
-                                //     return "Please Enter minimum character 2 and Maximum character 15";
-                                //   }
-                                //   return null;
-                                // },
                                 myController: usernameController,
                                 hintText: "email_hint".tr,
                                 obscureText: false,
@@ -146,6 +132,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                               Obx(
                                 () => LoanTextField(
+                                  //maxLines: null,
                                   validate: (value) {
                                     if (value!.isEmpty) {
                                       return "password must not be empty";
@@ -158,8 +145,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                                     return null;
                                   },
-                                  autovalidateMode:
-                                      AutovalidateMode.onUserInteraction,
+
                                   textType: TextInputType.visiblePassword,
                                   msg: "Please enter Password",
                                   maxLength: 15,

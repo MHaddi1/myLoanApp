@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:main_loan_app/models/loan_account.dart';
 import 'package:main_loan_app/utils/utils.dart';
@@ -7,11 +8,10 @@ class HomeController extends GetxController {
   Rx<DateTime> selectedDate = DateTime.now().obs;
   RxString businessNames = ''.obs;
   RxString businessAddress = ''.obs;
-  RxString amount = ''.obs;
+  RxInt amount = 0.obs;
   RxString reason = ''.obs;
   RxString selectedItem2 = '5 Year'.obs;
   RxString interest = ''.obs;
-  final FirebaseFirestore firestore = FirebaseFirestore.instance;
   RxInt displayValue = RxInt(0);
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -28,7 +28,7 @@ class HomeController extends GetxController {
     businessAddress.value = address;
   }
 
-  void setAmount(String amount) {
+  void setAmount(int amount) {
     this.amount.value = amount;
   }
 
@@ -43,7 +43,7 @@ class HomeController extends GetxController {
   DateTime get appliedDate => selectedDate.value;
   String get mybusinessName => businessNames.value;
   String get mybusinessAddress => businessAddress.value;
-  int get myAmount => int.parse(amount.value);
+  int get myAmount => amount.value;
   String get myReason => reason.value;
   String get mySelectedItem2 => selectedItem2.value;
 
@@ -120,4 +120,41 @@ class HomeController extends GetxController {
       print('Error retrieving data from Firebase: $e');
     }
   }
+
+  final Rx<LoanAccount?> loan = Rx<LoanAccount?>(null);
+  Future<void> fetchData() async {
+    //isLoading.value = true;
+    var collectionReference =
+        FirebaseFirestore.instance.collection("loan_accounts");
+    var allData = await collectionReference.get();
+    var dId = allData.docs.last.id;
+    try {
+      final docSnapshot =
+          await _firestore.collection('loan_accounts').doc(dId).get();
+      _debugPrint('Doc Snapshot ${docSnapshot.data()}');
+
+      if (docSnapshot.exists) {
+        final response = LoanAccount.fromJson(
+          docSnapshot.data() as Map<String, dynamic>,
+        );
+        loan.value = response;
+        if (loan.value != null) {
+          setReason(loan.value!.reason!);
+          setAmount(loan.value!.amount ?? 0);
+          setbusinessAddress(loan.value!.businessAdress!);
+          businessName(loan.value!.businessName!);
+        }
+      } else {
+        _debugPrint("Document not exists");
+      }
+    } catch (e) {
+      _debugPrint(e.toString());
+    } finally {
+      //isLoading.value = false;
+    }
+  }
+}
+
+void _debugPrint(message) {
+  if (kDebugMode) print(message);
 }
