@@ -203,8 +203,8 @@ class _HomePageState extends State<HomePage> {
                 decoration: const BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(35),
-                      topLeft: Radius.circular(35),
+                      topRight: Radius.circular(15),
+                      topLeft: Radius.circular(15),
                       bottomLeft: Radius.circular(12),
                       bottomRight: Radius.circular(12)),
                 ),
@@ -214,6 +214,7 @@ class _HomePageState extends State<HomePage> {
                           topLeft: Radius.circular(12),
                           topRight: Radius.circular(12))),
                   child: SingleChildScrollView(
+                    physics: const BouncingScrollPhysics(),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
@@ -222,6 +223,19 @@ class _HomePageState extends State<HomePage> {
                               horizontal: 15, vertical: 15),
                           child: Column(
                             children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text("Name"),
+                                  Row(
+                                    children: [Text("Total:"), Text("\$18000")],
+                                  )
+                                ],
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
                               MyCardDetail(),
                               SizedBox(
                                 height: 20,
@@ -234,41 +248,45 @@ class _HomePageState extends State<HomePage> {
                             ],
                           ),
                         ),
-                        if (showTextField)
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 15, vertical: 10),
-                            child: MyButton(
-                              text: "Request For Loan",
-                              onTap: () {
-                                Get.toNamed(RoutesName.loanApplied);
-                              },
-                            ),
-                          ),
-                        if (showReSubmitButton)
-                          MyButton(
-                            text: newStatus == null
-                                ? "ReSubmit Application"
-                                : "Loan ReSubmit Application",
-                            onTap: newStatus == null
-                                ? () {
-                                    Get.toNamed(RoutesName.enrollScrren1);
-                                  }
-                                : () {
-                                    if (kDebugMode) {
-                                      //homeController.fetchData();
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 15, vertical: 20),
+                          child: Column(
+                            children: [
+                              if (showTextField)
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 15, vertical: 10),
+                                  child: MyButton(
+                                    text: "Request For Loan",
+                                    onTap: () {
                                       Get.toNamed(RoutesName.loanApplied);
-                                    }
-                                  },
+                                    },
+                                  ),
+                                ),
+                              if (showReSubmitButton)
+                                MyButton(
+                                  text: newStatus == null
+                                      ? "ReSubmit Application"
+                                      : "Loan ReSubmit Application",
+                                  onTap: newStatus == null
+                                      ? () {
+                                          Get.toNamed(RoutesName.enrollScrren1);
+                                        }
+                                      : () {
+                                          if (kDebugMode) {
+                                            //homeController.fetchData();
+                                            Get.toNamed(RoutesName.loanApplied);
+                                          }
+                                        },
+                                ),
+                            ],
                           ),
+                        )
                       ],
                     ),
                   ),
                 ),
-              ),
-              const Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [],
               ),
             ],
           );
@@ -287,7 +305,7 @@ class MyCardDetail extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
-      height: 200,
+      height: Get.height * 0.25,
       decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(12),
@@ -306,7 +324,7 @@ class MyCardDetail extends StatelessWidget {
             children: [
               const Text(
                 "Name",
-                style: TextStyle(fontSize: 25),
+                style: TextStyle(fontSize: 20),
               ),
               Row(
                 children: [
@@ -319,7 +337,7 @@ class MyCardDetail extends StatelessWidget {
                   ),
                   Container(
                       decoration: BoxDecoration(
-                          color: Colors.grey[200],
+                          color: Colors.grey[300],
                           boxShadow: [
                             BoxShadow(
                               color: Colors.black.withOpacity(0.1),
@@ -339,11 +357,11 @@ class MyCardDetail extends StatelessWidget {
                 children: [
                   Text(
                     "\$90000",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                   ),
                   Text(
                     "90000",
-                    style: TextStyle(fontSize: 15),
+                    style: TextStyle(fontSize: 13),
                   ),
                 ],
               ),
@@ -351,11 +369,11 @@ class MyCardDetail extends StatelessWidget {
                 children: [
                   Text(
                     "5%",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                   ),
                   Text(
                     "interst",
-                    style: TextStyle(fontSize: 15),
+                    style: TextStyle(fontSize: 13),
                   ),
                 ],
               ),
@@ -363,11 +381,11 @@ class MyCardDetail extends StatelessWidget {
                 children: [
                   Text(
                     "\$390",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    "90000",
-                    style: TextStyle(fontSize: 15),
+                    "monthly Payment",
+                    style: TextStyle(fontSize: 13),
                   ),
                 ],
               )
@@ -377,6 +395,7 @@ class MyCardDetail extends StatelessWidget {
             alignment: Alignment.topLeft,
             child: Text(
               "Company Name",
+              style: TextStyle(fontSize: 12),
             ),
           ),
         ],

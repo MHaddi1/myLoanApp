@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:main_loan_app/view_models/controllers/enroll_controller/enroll_controller.dart';
@@ -28,9 +29,10 @@ class _SplashScreenState extends State<SplashScreen> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Image.network(
-            "https://images.sftcdn.net/images/t_app-icon-m/p/56e4b038-3f90-406f-a6f7-57a5a418f361/2594640530/smart-loan-payday-loans-app-logo",
+          CachedNetworkImage(
             height: 100,
+            imageUrl:
+                'https://images.sftcdn.net/images/t_app-icon-m/p/56e4b038-3f90-406f-a6f7-57a5a418f361/2594640530/smart-loan-payday-loans-app-logo',
           ),
           const SizedBox(
             height: 12.0,
