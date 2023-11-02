@@ -121,7 +121,7 @@ class _HomePageState extends State<HomePage> {
               //showSubmitButton = true;
             }
           } else if (loanStatus == 2) {
-            iconData = Icons.warning;
+            iconData = const IconData(0xf07ec, fontFamily: 'MaterialIcons');
             textColor = Colors.red;
             statusText = "Rejection";
             message = "Please Recheck Your information\n and Try Again";
@@ -254,16 +254,18 @@ class _HomePageState extends State<HomePage> {
                           child: Column(
                             children: [
                               if (showTextField)
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 15, vertical: 10),
-                                  child: MyButton(
-                                    text: "Request For Loan",
-                                    onTap: () {
-                                      Get.toNamed(RoutesName.loanApplied);
-                                    },
-                                  ),
-                                ),
+                                newStatus == 1 || newStatus == 0
+                                    ? const SizedBox()
+                                    : Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 15, vertical: 10),
+                                        child: MyButton(
+                                          text: "Request For Loan",
+                                          onTap: () {
+                                            Get.toNamed(RoutesName.loanApplied);
+                                          },
+                                        ),
+                                      ),
                               if (showReSubmitButton)
                                 MyButton(
                                   text: newStatus == null
@@ -316,41 +318,19 @@ class MyCardDetail extends StatelessWidget {
               blurRadius: 2,
             )
           ]),
-      child: Column(
+      child: const Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              const Text(
+              Text(
                 "Name",
                 style: TextStyle(fontSize: 20),
               ),
-              Row(
-                children: [
-                  const Icon(
-                    Icons.delete,
-                    color: Colors.pink,
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  Container(
-                      decoration: BoxDecoration(
-                          color: Colors.grey[300],
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.1),
-                              spreadRadius: 2,
-                            )
-                          ],
-                          borderRadius: BorderRadius.circular(2)),
-                      child: const Icon(Icons.settings))
-                ],
-              )
             ],
           ),
-          const Row(
+          Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Column(
@@ -391,7 +371,7 @@ class MyCardDetail extends StatelessWidget {
               )
             ],
           ),
-          const Align(
+          Align(
             alignment: Alignment.topLeft,
             child: Text(
               "Company Name",
