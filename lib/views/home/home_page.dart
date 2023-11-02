@@ -9,6 +9,7 @@ import 'package:main_loan_app/utils/utils.dart';
 import 'package:main_loan_app/view_models/controllers/enroll_controller/enroll_controller.dart';
 import 'package:main_loan_app/view_models/controllers/home_controller/home_controller.dart';
 import 'package:main_loan_app/view_models/shared_p/shared_preference.dart';
+import 'package:main_loan_app/views/splash_screen.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -29,6 +30,12 @@ class _HomePageState extends State<HomePage> {
   bool showReSubmitButton = false;
   bool showTextField = false;
 
+  void refresh() {
+    setState(() {
+      Get.offAndToNamed(RoutesName.splashScreen);
+    });
+  }
+
   @override
   void dispose() {
     amount.dispose();
@@ -38,6 +45,8 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+
+    //refresh();
     enrollController.fetchData();
     homeController.fetchData();
   }
@@ -74,7 +83,7 @@ class _HomePageState extends State<HomePage> {
               );
             },
             icon: const Icon(Icons.logout),
-          )
+          ),
         ],
       ),
       body: StreamBuilder<DocumentSnapshot>(
@@ -117,6 +126,7 @@ class _HomePageState extends State<HomePage> {
             message = "Approved";
             statusIcons = Icons.check_box;
             showTextField = true;
+            showReSubmitButton = false;
             if (newStatus == 2) {
               //showSubmitButton = true;
             }
@@ -127,6 +137,7 @@ class _HomePageState extends State<HomePage> {
             message = "Please Recheck Your information\n and Try Again";
             statusIcons = Icons.warning;
             showReSubmitButton = true;
+            showTextField = true;
           }
 
           return Column(
@@ -192,6 +203,15 @@ class _HomePageState extends State<HomePage> {
                       ],
                     ),
                   ),
+                  newStatus == 1
+                      ? Text(
+                          "Cradit: ${data['amount']}",
+                          style: const TextStyle(
+                              fontSize: 18,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold),
+                        )
+                      : const SizedBox(),
                 ],
               ),
               const SizedBox(
@@ -253,35 +273,45 @@ class _HomePageState extends State<HomePage> {
                               horizontal: 15, vertical: 20),
                           child: Column(
                             children: [
-                              if (showTextField)
-                                newStatus == 1 || newStatus == 0
-                                    ? const SizedBox()
-                                    : Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 15, vertical: 10),
-                                        child: MyButton(
-                                          text: "Request For Loan",
-                                          onTap: () {
-                                            Get.toNamed(RoutesName.loanApplied);
-                                          },
-                                        ),
-                                      ),
-                              if (showReSubmitButton)
-                                MyButton(
-                                  text: newStatus == null
-                                      ? "ReSubmit Application"
-                                      : "Loan ReSubmit Application",
-                                  onTap: newStatus == null
-                                      ? () {
-                                          Get.toNamed(RoutesName.enrollScrren1);
-                                        }
-                                      : () {
-                                          if (kDebugMode) {
-                                            //homeController.fetchData();
-                                            Get.toNamed(RoutesName.loanApplied);
-                                          }
-                                        },
-                                ),
+                              // showTextField
+                              //     ? const SizedBox()
+                              //     : Padding(
+                              //         padding: const EdgeInsets.symmetric(
+                              //             horizontal: 15, vertical: 10),
+                              //         child: MyButton(
+                              //           text: "Request For Loan",
+                              //           onTap: () {
+                              //             Get.toNamed(RoutesName.loanApplied);
+                              //           },
+                              //         ),
+                              //       ),
+                              if (showReSubmitButton || showTextField)
+                                if (newStatus == null) ...[
+                                  if (loanStatus == 1)
+                                    MyButton(
+                                      text: "Request For loan",
+                                      onTap: () {
+                                        Get.toNamed(RoutesName.loanApplied);
+                                      },
+                                    ),
+                                  if (loanStatus == 2)
+                                    MyButton(
+                                      text: "Loan ReSubmit Application",
+                                      onTap: () {
+                                        Get.toNamed(RoutesName.enrollScrren1);
+                                      },
+                                    )
+                                ] else ...[
+                                  if (newStatus == 0 || newStatus == 1)
+                                    const SizedBox()
+                                  else
+                                    MyButton(
+                                      text: "ReSubmit Loan Application",
+                                      onTap: () {
+                                        Get.toNamed(RoutesName.loanApplied);
+                                      },
+                                    ),
+                                ]
                             ],
                           ),
                         )
