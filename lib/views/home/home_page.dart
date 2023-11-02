@@ -370,7 +370,9 @@ class MyCardDetail extends StatelessWidget {
               Column(
                 children: [
                   Text(
-                    newStatus == 1 ? "\$${homeController.myAmount}" : "\$0",
+                    newStatus == 1
+                        ? "\$${homeController.loan.value!.amount}"
+                        : "\$0",
                     style: const TextStyle(
                         fontSize: 15, fontWeight: FontWeight.bold),
                   ),
@@ -384,7 +386,7 @@ class MyCardDetail extends StatelessWidget {
                 children: [
                   Text(
                     newStatus == 1 || newStatus == 2
-                        ? "${homeController.mySelectedItem2}%"
+                        ? "${homeController.loan.value!.interestRate}%"
                         : "0%",
                     style: const TextStyle(
                         fontSize: 15, fontWeight: FontWeight.bold),
