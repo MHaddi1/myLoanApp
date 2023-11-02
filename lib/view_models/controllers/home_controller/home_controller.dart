@@ -10,7 +10,7 @@ class HomeController extends GetxController {
   RxString businessAddress = ''.obs;
   RxInt amount = 0.obs;
   RxString reason = ''.obs;
-  RxString selectedItem2 = '5 Year'.obs;
+  RxString selectedItem2 = '5'.obs;
   RxString interest = ''.obs;
   RxInt displayValue = RxInt(0);
 
@@ -38,6 +38,11 @@ class HomeController extends GetxController {
 
   void setSelectedItem2(String selectedItem2) {
     this.selectedItem2.value = selectedItem2;
+    if (selectedItem2 == '5') {
+      this.selectedItem2.value = "5";
+    } else if (selectedItem2 == "10") {
+      this.selectedItem2.value = "10";
+    }
   }
 
   DateTime get appliedDate => selectedDate.value;
@@ -48,7 +53,7 @@ class HomeController extends GetxController {
   String get mySelectedItem2 => selectedItem2.value;
 
   myMessage() {
-    if (mySelectedItem2 == "5 Year") {
+    if (mySelectedItem2 == "5") {
       interest.value = "Your Interest rate is 5%";
     } else {
       interest.value = "Your Interest rate is 10%";
@@ -63,7 +68,8 @@ class HomeController extends GetxController {
         'business_name': loanAccount.businessName,
         'business_address': loanAccount.businessAdress,
         'reason': loanAccount.reason,
-        'new_status': loanAccount.newStatus
+        'new_status': loanAccount.newStatus,
+        'interest_rate': loanAccount.interestRate
       });
       Utils.snackBar("Success", "Amount updated in Firestore successfully");
     } catch (e) {
@@ -84,6 +90,7 @@ class HomeController extends GetxController {
       appliedDate: appliedDate,
       reason: myReason,
       newStatus: 0,
+      interestRate: double.parse(mySelectedItem2),
       otherUserInfo: {
         'name': '',
         'phone': '',
@@ -98,6 +105,7 @@ class HomeController extends GetxController {
         FirebaseFirestore.instance.collection("loan_accounts");
     var allData = await collectionReference.get();
     var dId = allData.docs.last.id;
+    addLoanData(loanAccount);
     updateAmount(dId, loanAccount);
   }
 
@@ -151,6 +159,24 @@ class HomeController extends GetxController {
       _debugPrint(e.toString());
     } finally {
       //isLoading.value = false;
+    }
+  }
+
+  addLoanData(LoanAccount loanAccount) async {
+    try {
+      await _firestore.collection('Loan_Data').add({
+        'amount': loanAccount.amount,
+        'applied_date': loanAccount.appliedDate,
+        'business_name': loanAccount.businessName,
+        'business_address': loanAccount.businessAdress,
+        'reason': loanAccount.reason,
+        'new_status': loanAccount.newStatus,
+        'loan_status': 1,
+        'interest_rate': loanAccount.interestRate
+      });
+      Utils.snackBar("Success", "Data added to Firestore successfully");
+    } catch (e) {
+      Utils.snackBar("Error", "Failed to add data to Firestore: $e");
     }
   }
 }

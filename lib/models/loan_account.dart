@@ -9,6 +9,7 @@ class LoanAccount {
   final DateTime? appliedDate;
   final String? reason;
   final int? newStatus;
+  final double interestRate;
   final Map<String, dynamic> otherUserInfo;
 
   LoanAccount({
@@ -20,6 +21,7 @@ class LoanAccount {
     required this.appliedDate,
     required this.reason,
     required this.newStatus,
+    required this.interestRate,
     required this.otherUserInfo,
   });
 
@@ -33,6 +35,7 @@ class LoanAccount {
           (data['applied_date'] as Timestamp?)?.toDate() ?? DateTime.now(),
       reason: data['reason'] as String? ?? "",
       newStatus: data['new_status'] as int? ?? 0,
+      interestRate: data['interest_rate'] as double? ?? 0.0,
       otherUserInfo: data['other_user_info'] as Map<String, dynamic>? ?? {},
       userId: data['user_id'] as String? ?? "",
     );
@@ -43,10 +46,11 @@ class LoanAccount {
       'loan_status': loanStatus,
       'amount': amount,
       'business_name': businessName,
-      'business_adress': businessAdress,
+      'business_address': businessAdress,
       'applied_date': appliedDate!.toIso8601String(),
       'reason': reason,
       'new_status': newStatus,
+      'interest_rate': interestRate,
       'other_user_info': otherUserInfo,
     };
   }
@@ -59,6 +63,7 @@ class LoanAccount {
     String? businessAdress,
     DateTime? appliedDate,
     String? reason,
+    double? interestRate,
     int? newStatus,
     Map<String, dynamic>? otherUserInfo,
   }) {
@@ -71,6 +76,7 @@ class LoanAccount {
       appliedDate: appliedDate ?? this.appliedDate,
       reason: reason ?? this.reason,
       newStatus: newStatus ?? this.newStatus,
+      interestRate: interestRate ?? this.interestRate,
       otherUserInfo: otherUserInfo ?? this.otherUserInfo,
     );
   }
@@ -79,8 +85,8 @@ class LoanAccount {
     return copyWith(amount: newAmount);
   }
 
-  LoanAccount updateappliedDate(DateTime newappliedDate) {
-    return copyWith(appliedDate: newappliedDate);
+  LoanAccount updateAppliedDate(DateTime newAppliedDate) {
+    return copyWith(appliedDate: newAppliedDate);
   }
 
   LoanAccount updateNewStatus(int newNewStatus) {
@@ -89,7 +95,7 @@ class LoanAccount {
 
   @override
   String toString() {
-    return 'LoanAccount{userId: $userId, loanStatus: $loanStatus, amount: $amount, businessName: $businessName, businessAddress: $businessAdress, appliedDate: $appliedDate, reason: $reason, newStatus: $newStatus, otherUserInfo: $otherUserInfo}';
+    return 'LoanAccount{userId: $userId, loanStatus: $loanStatus, amount: $amount, businessName: $businessName, businessAdress: $businessAdress, appliedDate: $appliedDate, reason: $reason, newStatus: $newStatus, interestRate: $interestRate, otherUserInfo: $otherUserInfo}';
   }
 
   @override
@@ -105,6 +111,7 @@ class LoanAccount {
           appliedDate == other.appliedDate &&
           reason == other.reason &&
           newStatus == other.newStatus &&
+          interestRate == other.interestRate &&
           otherUserInfo == other.otherUserInfo;
 
   @override
@@ -117,5 +124,6 @@ class LoanAccount {
       appliedDate.hashCode ^
       reason.hashCode ^
       newStatus.hashCode ^
+      interestRate.hashCode ^
       otherUserInfo.hashCode;
 }

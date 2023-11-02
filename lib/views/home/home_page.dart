@@ -1,6 +1,7 @@
+import 'dart:ffi';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:main_loan_app/res/components/my_button.dart';
@@ -9,7 +10,6 @@ import 'package:main_loan_app/utils/utils.dart';
 import 'package:main_loan_app/view_models/controllers/enroll_controller/enroll_controller.dart';
 import 'package:main_loan_app/view_models/controllers/home_controller/home_controller.dart';
 import 'package:main_loan_app/view_models/shared_p/shared_preference.dart';
-import 'package:main_loan_app/views/splash_screen.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -218,7 +218,7 @@ class _HomePageState extends State<HomePage> {
                 height: 10,
               ),
               Container(
-                alignment: Alignment.bottomCenter,
+                alignment: Alignment.topLeft,
                 height: MediaQuery.of(context).size.height * 0.67,
                 decoration: const BoxDecoration(
                   color: Colors.white,
@@ -238,12 +238,12 @@ class _HomePageState extends State<HomePage> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        const Padding(
-                          padding: EdgeInsets.symmetric(
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
                               horizontal: 15, vertical: 15),
                           child: Column(
                             children: [
-                              Row(
+                              const Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
@@ -253,18 +253,16 @@ class _HomePageState extends State<HomePage> {
                                   )
                                 ],
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 20,
                               ),
-                              MyCardDetail(),
-                              SizedBox(
+                              MyCardDetail(
+                                newStatus: newStatus,
+                                loanStatus: loanStatus,
+                              ),
+                              const SizedBox(
                                 height: 20,
                               ),
-                              MyCardDetail(),
-                              SizedBox(
-                                height: 20,
-                              ),
-                              MyCardDetail()
                             ],
                           ),
                         ),
@@ -329,12 +327,18 @@ class _HomePageState extends State<HomePage> {
 }
 
 class MyCardDetail extends StatelessWidget {
+  final int loanStatus;
+  final int newStatus;
   const MyCardDetail({
     super.key,
+    required this.loanStatus,
+    required this.newStatus,
   });
 
   @override
   Widget build(BuildContext context) {
+    final enrollConroller = Get.find<EnrollController>();
+    final homeController = Get.find<HomeController>();
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
       height: Get.height * 0.25,
@@ -348,15 +352,15 @@ class MyCardDetail extends StatelessWidget {
               blurRadius: 2,
             )
           ]),
-      child: const Column(
+      child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Text(
-                "Name",
-                style: TextStyle(fontSize: 20),
+                "${enrollConroller.enroll.value!.user.fname} ${enrollConroller.enroll.value!.user.lname} ",
+                style: const TextStyle(fontSize: 20),
               ),
             ],
           ),
@@ -366,10 +370,11 @@ class MyCardDetail extends StatelessWidget {
               Column(
                 children: [
                   Text(
-                    "\$90000",
-                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                    newStatus == 1 ? "\$${homeController.myAmount}" : "\$0",
+                    style: const TextStyle(
+                        fontSize: 15, fontWeight: FontWeight.bold),
                   ),
-                  Text(
+                  const Text(
                     "90000",
                     style: TextStyle(fontSize: 13),
                   ),
@@ -378,16 +383,19 @@ class MyCardDetail extends StatelessWidget {
               Column(
                 children: [
                   Text(
-                    "5%",
-                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                    newStatus == 1 || newStatus == 2
+                        ? "${homeController.mySelectedItem2}%"
+                        : "0%",
+                    style: const TextStyle(
+                        fontSize: 15, fontWeight: FontWeight.bold),
                   ),
-                  Text(
+                  const Text(
                     "interst",
                     style: TextStyle(fontSize: 13),
                   ),
                 ],
               ),
-              Column(
+              const Column(
                 children: [
                   Text(
                     "\$390",
@@ -401,7 +409,7 @@ class MyCardDetail extends StatelessWidget {
               )
             ],
           ),
-          Align(
+          const Align(
             alignment: Alignment.topLeft,
             child: Text(
               "Company Name",

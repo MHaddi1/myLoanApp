@@ -25,6 +25,7 @@ class _LoanAppliedState extends State<LoanApplied> {
   @override
   void initState() {
     super.initState();
+    homeController;
     final loan = homeController.loan.value;
     if (loan != null) {
       business.text = loan.businessName ?? "";
@@ -141,12 +142,13 @@ class _LoanAppliedState extends State<LoanApplied> {
                                 icon: null,
                                 onChanged: (String? newValue) {
                                   homeController.setSelectedItem2(newValue!);
+
                                   homeController.myMessage();
                                 },
                                 dropdownColor: AppColor.feildColor,
                                 items: <String>[
-                                  '5 Year',
-                                  '10 Year',
+                                  '5',
+                                  '10',
                                 ].map((String val) {
                                   return DropdownMenuItem<String>(
                                     value: val,
